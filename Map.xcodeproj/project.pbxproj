@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C808CF002D8CC4E8003B1CC3 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = C808CEFF2D8CC4E8003B1CC3 /* MapboxMaps */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C83C128E2D8CB94300F9AA20 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		C83C12972D8CB94300F9AA20 /* MapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C808CEFE2D8CC468003B1CC3 /* Exceptions for "Map" folder in "Map" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C83C127C2D8CB94300F9AA20 /* Map */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C83C127F2D8CB94300F9AA20 /* Map */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C808CEFE2D8CC468003B1CC3 /* Exceptions for "Map" folder in "Map" target */,
+			);
 			path = Map;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C808CF002D8CC4E8003B1CC3 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			);
 			name = Map;
 			packageProductDependencies = (
+				C808CEFF2D8CC4E8003B1CC3 /* MapboxMaps */,
 			);
 			productName = Map;
 			productReference = C83C127D2D8CB94300F9AA20 /* Map.app */;
@@ -195,6 +214,9 @@
 			);
 			mainGroup = C83C12742D8CB94200F9AA20;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C83C12AA2D8CC1F200F9AA20 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C83C127E2D8CB94300F9AA20 /* Products */;
 			projectDirPath = "";
@@ -399,6 +421,9 @@
 				DEVELOPMENT_TEAM = LK8M3QQF58;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Map/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Explore Map";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +453,9 @@
 				DEVELOPMENT_TEAM = LK8M3QQF58;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Map/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Explore Map";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +586,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C83C12AA2D8CC1F200F9AA20 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C808CEFF2D8CC4E8003B1CC3 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C83C12AA2D8CC1F200F9AA20 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C83C12752D8CB94200F9AA20 /* Project object */;
 }
