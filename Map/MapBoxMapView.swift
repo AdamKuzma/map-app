@@ -5,12 +5,13 @@ import CoreLocation
 
 // MARK: - MapBoxMapView (Move to MapBoxMapView.swift)
 struct MapBoxMapView: UIViewRepresentable {
-    let locationManager: LocationManager
+    @ObservedObject var locationManager: LocationManager
     @Binding var isTestMode: Bool
     @Binding var isLocationTracking: Bool
     @Binding var isExploreMode: Bool
     @Binding var exploredPercentage: Double
     @Binding var currentNeighborhood: String
+    @Binding var fogOverlay: FogOverlay?
     
     class Coordinator: NSObject {
         var styleLoadedToken: AnyCancelable?
@@ -61,6 +62,12 @@ struct MapBoxMapView: UIViewRepresentable {
         let fogOverlay = FogOverlay(mapView: mapView, isExploreMode: isExploreMode)
         mapView.addSubview(fogOverlay)
         
+        // Set the fog overlay binding
+        DispatchQueue.main.async {
+            self.fogOverlay = fogOverlay
+            print("FogOverlay set. Visited locations: \(fogOverlay.visitedLocations.count)")
+        }
+        
         // Update fog overlay when map changes
         context.coordinator.cameraChangedToken = mapView.mapboxMap.onCameraChanged.observe { _ in
             fogOverlay.frame = mapView.bounds
@@ -68,18 +75,13 @@ struct MapBoxMapView: UIViewRepresentable {
         }
         
         // Update fog overlay when location changes
-        locationManager.onLocationUpdate = { location in
+        locationManager.onLocationUpdate = { location, speed in
             if fogOverlay.isExploreMode {
                 fogOverlay.currentLocation = location
-                fogOverlay.addLocation(location)
+                fogOverlay.addLocation(location, speed: speed)
                 
-                // Update neighborhood name in explore mode
-                let newNeighborhood = Neighborhoods.getNeighborhoodName(for: location)
-                if newNeighborhood != self.currentNeighborhood {
-                    DispatchQueue.main.async {
-                        self.currentNeighborhood = newNeighborhood
-                    }
-                }
+                // The neighborhood update is now handled in the updateUITimer
+                // to keep everything consistent in one place
             }
             
             // Center on location if we haven't moved the map yet
@@ -96,52 +98,53 @@ struct MapBoxMapView: UIViewRepresentable {
         }
         
         // Start UI update timer for percentage only
-        context.coordinator.updateUITimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+        context.coordinator.updateUITimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
             if let currentLocation = fogOverlay.currentLocation {
-                exploredPercentage = fogOverlay.calculateExploredPercentage()
+                // First update the neighborhood name if needed
+                let newNeighborhood = Neighborhoods.getNeighborhoodName(for: currentLocation)
+                if newNeighborhood != self.currentNeighborhood {
+                    DispatchQueue.main.async {
+                        self.currentNeighborhood = newNeighborhood
+                    }
+                }
+                
+                // Then calculate percentage for the current neighborhood
+                if let neighborhood = Neighborhoods.getNeighborhoodForName(self.currentNeighborhood) {
+                    exploredPercentage = fogOverlay.calculateNeighborhoodPercentage(neighborhood)
+                } else {
+                    exploredPercentage = 0.0
+                }
             }
         }
         
         return mapView
     }
     
-    func updateUIView(_ uiView: MapboxMaps.MapView, context: Context) {
-        // Update fog overlay frame and mode
-        if let fogOverlay = uiView.subviews.first(where: { $0 is FogOverlay }) as? FogOverlay {
-            fogOverlay.frame = uiView.bounds
-            
-            // Handle mode changes
-            if fogOverlay.isExploreMode != isExploreMode {
-                fogOverlay.setMode(isExplore: isExploreMode)
-                if !isExploreMode {
-                    fogOverlay.clearVisitedLocations()
-                }
-            }
-            
-            // Start or stop test mode
-            if isTestMode && !isExploreMode && !context.coordinator.isTestRunning {
-                startTestMode(fogOverlay: fogOverlay, coordinator: context.coordinator)
-            } else if !isTestMode {
-                context.coordinator.stopTest()
-            }
-            
-            // Only update camera position when location tracking is triggered
-            if isLocationTracking, let location = locationManager.currentLocation {
-                let camera = CameraOptions(center: location, zoom: 15)
-                uiView.mapboxMap.setCamera(to: camera)
-                // Reset tracking flag
+    func updateUIView(_ mapView: MapboxMaps.MapView, context: Context) {
+        // Update fog overlay reference if needed
+        if let overlay = mapView.subviews.first(where: { $0 is FogOverlay }) as? FogOverlay {
+            if self.fogOverlay == nil {
                 DispatchQueue.main.async {
-                    isLocationTracking = false
+                    self.fogOverlay = overlay
+                    print("FogOverlay updated in updateUIView")
                 }
             }
             
-            // Update explored percentage
-            DispatchQueue.main.async {
-                let percentage = fogOverlay.calculateExploredPercentage()
-                print("Total area: \(fogOverlay.calculatePolygonArea(Neighborhoods.parkSlope.boundary))")
-                print("Number of locations: \(fogOverlay.isExploreMode ? fogOverlay.visitedLocations.count : fogOverlay.testLocations.count)")
-                print("Calculated percentage: \(percentage)%")
-                self.exploredPercentage = percentage
+            // Update mode
+            overlay.setMode(isExplore: isExploreMode)
+        }
+        
+        if isLocationTracking {
+            isLocationTracking = false
+            if let currentLocation = locationManager.currentLocation {
+                let camera = CameraOptions(center: currentLocation, zoom: 15)
+                mapView.mapboxMap.setCamera(to: camera)
+            }
+        }
+        
+        if isTestMode {
+            if let overlay = mapView.subviews.first(where: { $0 is FogOverlay }) as? FogOverlay {
+                startTestMode(fogOverlay: overlay, coordinator: context.coordinator)
             }
         }
     }
@@ -236,8 +239,12 @@ struct MapBoxMapView: UIViewRepresentable {
         source.data = .feature(feature)
         
         var lineLayer = LineLayer(id: "\(id)-line", source: "\(id)-source")
-        lineLayer.lineColor = Value<StyleColor>.constant(StyleColor(color))
-        lineLayer.lineWidth = Value<Double>.constant(3.0)
+        let transparentColor = color.withAlphaComponent(0.5)
+        lineLayer.lineColor = Value<StyleColor>.constant(StyleColor(transparentColor))
+        lineLayer.lineWidth = Value<Double>.constant(1.2)
+        
+        // Add dashed line pattern
+        lineLayer.lineDasharray = Value<[Double]>.constant([3, 3])
         
         do {
             try mapView.mapboxMap.addSource(source)
@@ -248,9 +255,23 @@ struct MapBoxMapView: UIViewRepresentable {
     }
     
     private func addNeighborhoodBoundaries(to mapView: MapboxMaps.MapView) {
+        // Use lighter colors for each boundary
         addBoundary(to: mapView, boundary: Neighborhoods.parkSlope.boundary, id: "park-slope", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.prospectPark.boundary, id: "prospect-park", color: .green)
-        print("Successfully added Park Slope and Prospect Park boundaries")
+        addBoundary(to: mapView, boundary: Neighborhoods.prospectPark.boundary, id: "prospect-park", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.greenwoodHeights.boundary, id: "greenwood-heights", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.gowanus.boundary, id: "gowanus", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.windsorTerrace.boundary, id: "windsor-terrace", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.carrollGardens.boundary, id: "carroll-gardens", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.cobbleHill.boundary, id: "cobble-hill", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.boeumHill.boundary, id: "boerum-hill", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.prospectHeights.boundary, id: "prospect-heights", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.crownHeights.boundary, id: "crown-heights", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.fortGreene.boundary, id: "fort-greene", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.columbiaWaterfront.boundary, id: "columbia-waterfront", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.brooklynHeights.boundary, id: "brooklyn-heights", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.dumbo.boundary, id: "dumbo", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.downtownBrooklyn.boundary, id: "downtown-brooklyn", color: .blue)
+        print("Successfully added neighborhood boundaries with thinner, lighter lines")
     }
     
     private var locationOptions: LocationOptions {

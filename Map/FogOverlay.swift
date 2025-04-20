@@ -10,8 +10,23 @@ class FogOverlay: UIView {
     var testLocations: [CLLocationCoordinate2D] = []
     var isExploreMode: Bool = true {
         didSet {
+            resetPercentageCache()
             setNeedsDisplay()
         }
+    }
+    
+    // Maximum speed for revealing fog (in meters/second)
+    // 2.0 m/s = 7.2 km/h (walking/jogging speed)
+    let maxWalkingSpeed: Double = 2.0
+    
+    // Cache for neighborhood percentages
+    private var percentageCache: [String: Double] = [:]
+    private var lastCalculationLocations: [String: Int] = [:]
+    
+    // Reset cache when the mode changes or on demand
+    func resetPercentageCache() {
+        percentageCache = [:]
+        lastCalculationLocations = [:]
     }
     
     // Calculate the area of a polygon using the Shoelace formula and convert to square meters
@@ -69,77 +84,275 @@ class FogOverlay: UIView {
     }
     
     // Calculate the percentage of area explored for a specific neighborhood
-    private func calculateNeighborhoodPercentage(_ boundary: [CLLocationCoordinate2D], locations: [CLLocationCoordinate2D]) -> Double {
-        let totalArea = calculatePolygonArea(boundary)
+    // private func calculateNeighborhoodPercentage(_ boundary: [CLLocationCoordinate2D], locations: [CLLocationCoordinate2D]) -> Double {
+    //     let totalArea = calculatePolygonArea(boundary)
         
-        // Create a grid to track explored points
-        let gridSize = 10 // meters
-        let gridWidth = Int(ceil(totalArea.squareRoot() / Double(gridSize)))
-        var exploredGrid = Array(repeating: Array(repeating: false, count: gridWidth), count: gridWidth)
+    //     // Create a grid to track explored points
+    //     let gridSize = 10 // meters
+    //     let gridWidth = Int(ceil(totalArea.squareRoot() / Double(gridSize)))
+    //     var exploredGrid = Array(repeating: Array(repeating: false, count: gridWidth), count: gridWidth)
         
-        // Get bounds of neighborhood
-        let minLat = boundary.map { $0.latitude }.min() ?? 0
-        let maxLat = boundary.map { $0.latitude }.max() ?? 0
-        let minLon = boundary.map { $0.longitude }.min() ?? 0
-        let maxLon = boundary.map { $0.longitude }.max() ?? 0
+    //     // Get bounds of neighborhood
+    //     let minLat = boundary.map { $0.latitude }.min() ?? 0
+    //     let maxLat = boundary.map { $0.latitude }.max() ?? 0
+    //     let minLon = boundary.map { $0.longitude }.min() ?? 0
+    //     let maxLon = boundary.map { $0.longitude }.max() ?? 0
         
-        var pointsInside = 0
-        for location in locations {
-            if isPointInPolygon(location, polygon: boundary) {
-                pointsInside += 1
+    //     var pointsInside = 0
+    //     for location in locations {
+    //         if isPointInPolygon(location, polygon: boundary) {
+    //             pointsInside += 1
                 
-                // Convert location to grid coordinates
-                let latRatio = (location.latitude - minLat) / (maxLat - minLat)
-                let lonRatio = (location.longitude - minLon) / (maxLon - minLon)
-                let gridX = Int(lonRatio * Double(gridWidth))
-                let gridY = Int(latRatio * Double(gridWidth))
+    //             // Convert location to grid coordinates
+    //             let latRatio = (location.latitude - minLat) / (maxLat - minLat)
+    //             let lonRatio = (location.longitude - minLon) / (maxLon - minLon)
+    //             let gridX = Int(lonRatio * Double(gridWidth))
+    //             let gridY = Int(latRatio * Double(gridWidth))
                 
-                // Mark points in the grid that are within the circle
-                let radiusInGrid = Int(ceil(baseRadius / Double(gridSize)))
-                for y in max(0, gridY - radiusInGrid)...min(gridWidth - 1, gridY + radiusInGrid) {
-                    for x in max(0, gridX - radiusInGrid)...min(gridWidth - 1, gridX + radiusInGrid) {
-                        let dx = Double(x - gridX) * Double(gridSize)
-                        let dy = Double(y - gridY) * Double(gridSize)
-                        if sqrt(dx*dx + dy*dy) <= baseRadius {
-                            exploredGrid[y][x] = true
-                        }
-                    }
-                }
-            }
-        }
+    //             // Mark points in the grid that are within the circle
+    //             let radiusInGrid = Int(ceil(baseRadius / Double(gridSize)))
+    //             for y in max(0, gridY - radiusInGrid)...min(gridWidth - 1, gridY + radiusInGrid) {
+    //                 for x in max(0, gridX - radiusInGrid)...min(gridWidth - 1, gridX + radiusInGrid) {
+    //                     let dx = Double(x - gridX) * Double(gridSize)
+    //                     let dy = Double(y - gridY) * Double(gridSize)
+    //                     if sqrt(dx*dx + dy*dy) <= baseRadius {
+    //                         exploredGrid[y][x] = true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
         
-        // Count explored grid points
-        var exploredPoints = 0
-        for y in 0..<gridWidth {
-            for x in 0..<gridWidth {
-                if exploredGrid[y][x] {
-                    exploredPoints += 1
-                }
-            }
-        }
+    //     // Count explored grid points
+    //     var exploredPoints = 0
+    //     for y in 0..<gridWidth {
+    //         for x in 0..<gridWidth {
+    //             if exploredGrid[y][x] {
+    //                 exploredPoints += 1
+    //             }
+    //         }
+    //     }
         
-        // Calculate percentage based on grid points
-        let percentage = Double(exploredPoints) / Double(gridWidth * gridWidth) * 100
+    //     // Calculate percentage based on grid points
+    //     let percentage = Double(exploredPoints) / Double(gridWidth * gridWidth) * 100
         
-        print("Points inside boundary: \(pointsInside)")
-        print("Explored grid points: \(exploredPoints) out of \(gridWidth * gridWidth)")
-        print("Final percentage: \(percentage)%")
-        return percentage
-    }
+    //     print("Points inside boundary: \(pointsInside)")
+    //     print("Explored grid points: \(exploredPoints) out of \(gridWidth * gridWidth)")
+    //     print("Final percentage: \(percentage)%")
+    //     return percentage
+    // }
     
     // Calculate the percentage of area explored within the current neighborhood
     func calculateExploredPercentage() -> Double {
         guard let currentLocation = currentLocation else { return 0.0 }
         
-        let locations = isExploreMode ? visitedLocations : testLocations
-        
+        // Find the current neighborhood
+        let neighborhood: Neighborhood?
         if isPointInPolygon(currentLocation, polygon: Neighborhoods.parkSlope.boundary) {
-            return calculateNeighborhoodPercentage(Neighborhoods.parkSlope.boundary, locations: locations)
+            neighborhood = Neighborhoods.parkSlope
         } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.prospectPark.boundary) {
-            return calculateNeighborhoodPercentage(Neighborhoods.prospectPark.boundary, locations: locations)
+            neighborhood = Neighborhoods.prospectPark
+        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.greenwoodHeights.boundary) {
+            neighborhood = Neighborhoods.greenwoodHeights
+        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.gowanus.boundary) {
+            neighborhood = Neighborhoods.gowanus
+        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.windsorTerrace.boundary) {
+            neighborhood = Neighborhoods.windsorTerrace
+        } else {
+            neighborhood = nil
+        }
+        
+        // If we're in a neighborhood, calculate the percentage
+        if let currentNeighborhood = neighborhood {
+            return calculateNeighborhoodPercentage(currentNeighborhood)
         }
         
         return 0.0 // Not in any neighborhood
+    }
+    
+    func calculateNeighborhoodPercentage(_ neighborhood: Neighborhood) -> Double {
+        // Get all visited locations (either from explore mode or test mode)
+        let allLocations = isExploreMode ? visitedLocations : testLocations
+        let locationCount = allLocations.count
+        
+        // Cache key based on neighborhood and mode
+        let cacheKey = "\(neighborhood.name)_\(isExploreMode ? "explore" : "test")"
+        
+        // Check if we've already calculated this percentage with the same number of locations
+        if let cachedCount = lastCalculationLocations[cacheKey], 
+           let cachedPercentage = percentageCache[cacheKey], 
+           cachedCount == locationCount {
+            print("Using cached percentage for \(neighborhood.name): \(cachedPercentage)%")
+            return cachedPercentage
+        }
+        
+        print("Calculating percentage for \(neighborhood.name)")
+        print("Total locations: \(locationCount)")
+        
+        if allLocations.isEmpty {
+            print("No locations found")
+            percentageCache[cacheKey] = 0.0
+            lastCalculationLocations[cacheKey] = 0
+            return 0.0
+        }
+        
+        // Filter locations that are within this specific neighborhood
+        let neighborhoodLocations = allLocations.filter { location in
+            isPointInPolygon(location, polygon: neighborhood.boundary)
+        }
+        
+        print("Locations in \(neighborhood.name): \(neighborhoodLocations.count)")
+        
+        if neighborhoodLocations.isEmpty {
+            print("No locations in this neighborhood")
+            percentageCache[cacheKey] = 0.0
+            lastCalculationLocations[cacheKey] = locationCount
+            return 0.0
+        }
+        
+        // Create a grid to track explored points - use the same radius as the fog circles
+        let gridSize = 0.0003 // Grid cell size
+        
+        // Convert baseRadius from meters to approximate degrees
+        // 1 degree ≈ 111,000 meters at the equator
+        let visibilityRadius = baseRadius / 111000.0
+        
+        // Find the bounds of the neighborhood
+        let minLat = neighborhood.boundary.map { $0.latitude }.min() ?? 0
+        let maxLat = neighborhood.boundary.map { $0.latitude }.max() ?? 0
+        let minLon = neighborhood.boundary.map { $0.longitude }.min() ?? 0
+        let maxLon = neighborhood.boundary.map { $0.longitude }.max() ?? 0
+        
+        // Create grid with spatial index for faster lookup
+        var grid: [String: Bool] = [:]
+        var totalPoints = 0
+        var exploredPoints = 0
+        
+        // Spatial index to reduce point checks
+        // Divide area into larger cells to quickly check which locations might affect grid points
+        let indexCellSize = visibilityRadius * 2 // Make cells at least as large as the visibility diameter
+        var spatialIndex: [String: [CLLocationCoordinate2D]] = [:]
+        
+        // Build spatial index for locations
+        for location in neighborhoodLocations {
+            let indexX = Int(location.longitude / indexCellSize)
+            let indexY = Int(location.latitude / indexCellSize)
+            let indexKey = "\(indexX),\(indexY)"
+            
+            if spatialIndex[indexKey] == nil {
+                spatialIndex[indexKey] = []
+            }
+            spatialIndex[indexKey]?.append(location)
+        }
+        
+        // For each point in the grid, check if it's explored
+        var lat = minLat
+        while lat <= maxLat {
+            var lon = minLon
+            while lon <= maxLon {
+                let point = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                // Only process points inside the neighborhood
+                if isPointInPolygon(point, polygon: neighborhood.boundary) {
+                    totalPoints += 1
+                    let key = "\(Int(lat * 100000)),\(Int(lon * 100000))"
+                    
+                    // Check if this grid cell is already marked as explored
+                    if grid[key] != true {
+                        // Get relevant locations from spatial index
+                        let indexX = Int(point.longitude / indexCellSize)
+                        let indexY = Int(point.latitude / indexCellSize)
+                        
+                        // Check the cell and adjacent cells
+                        var isExplored = false
+                        for dx in -1...1 {
+                            for dy in -1...1 {
+                                let neighborKey = "\(indexX + dx),\(indexY + dy)"
+                                if let cellLocations = spatialIndex[neighborKey] {
+                                    // Check if any location in this cell is within range
+                                    for location in cellLocations {
+                                        let distance = sqrt(pow(location.latitude - point.latitude, 2) + 
+                                                        pow(location.longitude - point.longitude, 2))
+                                        if distance <= visibilityRadius {
+                                            isExplored = true
+                                            break
+                                        }
+                                    }
+                                }
+                                if isExplored { break }
+                            }
+                            if isExplored { break }
+                        }
+                        
+                        if isExplored {
+                            grid[key] = true
+                            exploredPoints += 1
+                        }
+                    }
+                }
+                
+                lon += gridSize
+            }
+            lat += gridSize
+        }
+        
+        // Calculate percentage
+        let percentage = totalPoints > 0 ? (Double(exploredPoints) / Double(totalPoints)) * 100.0 : 0.0
+        
+        // Store in cache
+        percentageCache[cacheKey] = percentage
+        lastCalculationLocations[cacheKey] = locationCount
+        
+        print("Neighborhood: \(neighborhood.name), Total grid points: \(totalPoints), Explored: \(exploredPoints), Percentage: \(percentage)%")
+        
+        return percentage
+    }
+    
+    private func calculateCoveredArea(_ locations: [CLLocationCoordinate2D], in boundary: [CLLocationCoordinate2D]) -> Double {
+        // Create a grid of points within the boundary
+        let gridSize = 0.0003 // Use consistent grid size
+        
+        // Convert baseRadius from meters to approximate degrees
+        let visibilityRadius = baseRadius / 111000.0
+        
+        var coveredPoints = 0
+        var totalPoints = 0
+        
+        // Find the bounds of the neighborhood
+        let minLat = boundary.map { $0.latitude }.min() ?? 0
+        let maxLat = boundary.map { $0.latitude }.max() ?? 0
+        let minLon = boundary.map { $0.longitude }.min() ?? 0
+        let maxLon = boundary.map { $0.longitude }.max() ?? 0
+        
+        // Check each point in the grid
+        var lat = minLat
+        while lat <= maxLat {
+            var lon = minLon
+            while lon <= maxLon {
+                let point = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                // Check if point is inside the neighborhood
+                if isPointInPolygon(point, polygon: boundary) {
+                    totalPoints += 1
+                    
+                    // Check if point is covered by any visited location
+                    for location in locations {
+                        let distance = sqrt(pow(location.latitude - point.latitude, 2) + 
+                                         pow(location.longitude - point.longitude, 2))
+                        if distance <= visibilityRadius {
+                            coveredPoints += 1
+                            break
+                        }
+                    }
+                }
+                
+                lon += gridSize
+            }
+            lat += gridSize
+        }
+        
+        // Calculate the ratio of covered points to total points
+        return totalPoints > 0 ? Double(coveredPoints) / Double(totalPoints) * calculatePolygonArea(boundary) : 0
     }
     
     init(mapView: MapView, isExploreMode: Bool) {
@@ -173,30 +386,68 @@ class FogOverlay: UIView {
         }
     }
     
-    func addLocation(_ location: CLLocationCoordinate2D) {
+    func addLocation(_ location: CLLocationCoordinate2D, speed: CLLocationSpeed = -1) {
         let locations = isExploreMode ? visitedLocations : testLocations
         
-        // Only add new location if it's significantly different from the last one
-        if let lastLocation = locations.last {
-            let distance = sqrt(pow(location.latitude - lastLocation.latitude, 2) + 
-                             pow(location.longitude - lastLocation.longitude, 2))
-            if distance > 0.0001 { // Arbitrary threshold, adjust as needed
+        // Check if the user is moving at walking/jogging speed or slower
+        // If speed is not provided (like in test mode), we default to accepting the location
+        let isWalkingSpeed = speed < 0 || speed <= maxWalkingSpeed
+        
+        // Only proceed if we're in test mode OR the user is walking (not on a bus/car)
+        if !isExploreMode || isWalkingSpeed {
+            let isInBackground = UIApplication.shared.applicationState == .background
+            
+            // Determine if we should add this point based on distance
+            var shouldAddLocation = false
+            if let lastLocation = locations.last {
+                let distance = sqrt(pow(location.latitude - lastLocation.latitude, 2) + 
+                                 pow(location.longitude - lastLocation.longitude, 2))
+                
+                // Use a different distance threshold for background operation
+                let distanceThreshold = isInBackground ? 0.0002 : 0.0001 // Roughly double in background
+                
+                shouldAddLocation = distance > distanceThreshold
+            } else {
+                shouldAddLocation = true // Always add first location
+            }
+            
+            if shouldAddLocation {
+                print("Adding location to fog overlay (background: \(isInBackground))")
+                
                 if isExploreMode {
                     visitedLocations.append(location)
-                    saveVisitedLocations()
+                    // Save immediately in background mode to ensure locations aren't lost
+                    if isInBackground {
+                        saveVisitedLocations()
+                    } else {
+                        // In foreground, use a debounced save to reduce writes
+                        debouncedSaveVisitedLocations()
+                    }
                 } else {
                     testLocations.append(location)
                 }
-                setNeedsDisplay()
+                
+                // Force a redraw
+                DispatchQueue.main.async {
+                    self.setNeedsDisplay()
+                }
             }
         } else {
-            if isExploreMode {
-                visitedLocations.append(location)
-                saveVisitedLocations()
-            } else {
-                testLocations.append(location)
-            }
-            setNeedsDisplay()
+            // Still update current location but don't add to visited locations
+            // This allows the app to keep tracking the user without revealing fog
+            print("Moving too fast (speed: \(speed) m/s) - not revealing fog")
+        }
+    }
+    
+    // Debounced save to reduce frequent writes in foreground
+    private var saveTimer: Timer?
+    private func debouncedSaveVisitedLocations() {
+        // Cancel any existing timer
+        saveTimer?.invalidate()
+        
+        // Set new timer
+        saveTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            self?.saveVisitedLocations()
         }
     }
     
