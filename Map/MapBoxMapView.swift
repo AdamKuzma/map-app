@@ -20,6 +20,7 @@ struct MapBoxMapView: UIViewRepresentable {
         var cameraChangedToken: AnyCancelable?
         var currentTestLocation: CLLocationCoordinate2D?
         var isTestRunning = false
+        weak var fogOverlay: FogOverlay?
         
         func stopTest() {
             testTimer?.invalidate()
@@ -47,6 +48,7 @@ struct MapBoxMapView: UIViewRepresentable {
         // Start with default options, we'll set the camera position when we get the location
         let options = MapInitOptions(styleURI: .dark)
         let mapView = MapboxMaps.MapView(frame: .zero, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         // Hide the scale bar and minimize attribution
         mapView.ornaments.options.scaleBar.margins = .init(x: -100, y: -100)  // Move scale bar off screen
@@ -59,14 +61,11 @@ struct MapBoxMapView: UIViewRepresentable {
         mapView.location.override(provider: locationManager.locationProvider)
         
         // Add fog of war overlay
-        let fogOverlay = FogOverlay(mapView: mapView, isExploreMode: isExploreMode)
+        let fogOverlay = FogOverlay(mapView: mapView, isExploreMode: true, locationManager: locationManager)
         mapView.addSubview(fogOverlay)
-        
-        // Set the fog overlay binding
-        DispatchQueue.main.async {
-            self.fogOverlay = fogOverlay
-            print("FogOverlay set. Visited locations: \(fogOverlay.visitedLocations.count)")
-        }
+        fogOverlay.frame = mapView.bounds
+        fogOverlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        context.coordinator.fogOverlay = fogOverlay
         
         // Update fog overlay when map changes
         context.coordinator.cameraChangedToken = mapView.mapboxMap.onCameraChanged.observe { _ in
@@ -155,12 +154,14 @@ struct MapBoxMapView: UIViewRepresentable {
     }
     
     private func startTestMode(fogOverlay: FogOverlay, coordinator: Coordinator) {
-        // Only start if not already running
-        guard !coordinator.isTestRunning else { return }
+        // Stop any existing test
+        coordinator.stopTest()
         
-        // Clear existing locations
+        // Clear existing locations and reset state
         fogOverlay.currentLocation = nil
         fogOverlay.clearVisitedLocations()
+        coordinator.isTestRunning = false
+        coordinator.currentTestLocation = nil
         
         // Get current user location or use a default if not available
         let startLocation = locationManager.currentLocation ?? CLLocationCoordinate2D(latitude: 40.7580, longitude: -73.9855)
@@ -198,7 +199,9 @@ struct MapBoxMapView: UIViewRepresentable {
             let lonDiff = prospectPark.longitude - currentLocation.longitude
             
             // Move in the direction of Prospect Park
-            let stepSize = 0.0005 // Adjust this value to control speed
+            // 40 meters ≈ 0.00036 degrees (at this latitude)
+            let stepSize = 0.00036 // 40 meters per step
+            
             if abs(latDiff) > 0.0001 || abs(lonDiff) > 0.0001 {
                 // Move proportionally in both latitude and longitude
                 let totalDiff = abs(latDiff) + abs(lonDiff)

@@ -4,6 +4,7 @@ import CoreLocation
 
 class FogOverlay: UIView {
     weak var mapView: MapView?
+    weak var locationManager: LocationManager?
     var currentLocation: CLLocationCoordinate2D?
     let baseRadius: CLLocationDistance = 60 // Base radius in meters
     var visitedLocations: [CLLocationCoordinate2D] = []
@@ -355,8 +356,9 @@ class FogOverlay: UIView {
         return totalPoints > 0 ? Double(coveredPoints) / Double(totalPoints) * calculatePolygonArea(boundary) : 0
     }
     
-    init(mapView: MapView, isExploreMode: Bool) {
+    init(mapView: MapView, isExploreMode: Bool, locationManager: LocationManager) {
         self.mapView = mapView
+        self.locationManager = locationManager
         self.isExploreMode = isExploreMode
         super.init(frame: .zero)
         backgroundColor = .clear
@@ -389,12 +391,11 @@ class FogOverlay: UIView {
     func addLocation(_ location: CLLocationCoordinate2D, speed: CLLocationSpeed = -1) {
         let locations = isExploreMode ? visitedLocations : testLocations
         
-        // Check if the user is moving at walking/jogging speed or slower
-        // If speed is not provided (like in test mode), we default to accepting the location
-        let isWalkingSpeed = speed < 0 || speed <= maxWalkingSpeed
+        // Check if the user is walking/running
+        let isWalking = !isExploreMode || (locationManager?.isWalking ?? false)
         
-        // Only proceed if we're in test mode OR the user is walking (not on a bus/car)
-        if !isExploreMode || isWalkingSpeed {
+        // Only proceed if we're in test mode OR the user is walking/running
+        if !isExploreMode || isWalking {
             let isInBackground = UIApplication.shared.applicationState == .background
             
             // Determine if we should add this point based on distance
@@ -435,7 +436,7 @@ class FogOverlay: UIView {
         } else {
             // Still update current location but don't add to visited locations
             // This allows the app to keep tracking the user without revealing fog
-            print("Moving too fast (speed: \(speed) m/s) - not revealing fog")
+            print("Not walking/running - not revealing fog")
         }
     }
     

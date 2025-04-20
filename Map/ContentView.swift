@@ -26,7 +26,7 @@ struct NeighborhoodsListView: View {
                 Spacer()
                 Text("Explored Neighborhoods")
                     .font(.headline)
-                    .padding()
+                    .padding(.top, 30)
                 Spacer()
             }
             
@@ -117,7 +117,7 @@ struct ContentView: View {
     @State private var currentNeighborhood = "New York"
     @State private var showNeighborhoodsList = false
     @State private var fogOverlay: FogOverlay?
-    @State private var currentBatteryMode: LocationManager.UpdateStrategy = .balanced
+    @State private var showDebugLogs = false
     @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
@@ -141,138 +141,54 @@ struct ContentView: View {
                 isTestMode: $isTestMode,
                 currentNeighborhood: $currentNeighborhood,
                 exploredPercentage: $exploredPercentage,
-                showNeighborhoodsList: $showNeighborhoodsList
+                showNeighborhoodsList: $showNeighborhoodsList,
+                showDebugLogs: $showDebugLogs
             )
-            
-            // Battery Saver Button
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Menu {
-                        Button {
-                            locationManager.setUpdateStrategy(.highAccuracy)
-                            currentBatteryMode = .highAccuracy
-                        } label: {
-                            HStack {
-                                Text("High Accuracy")
-                                if currentBatteryMode == .highAccuracy {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                        
-                        Button {
-                            locationManager.setUpdateStrategy(.balanced)
-                            currentBatteryMode = .balanced
-                        } label: {
-                            HStack {
-                                Text("Balanced")
-                                if currentBatteryMode == .balanced {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                        
-                        Button {
-                            locationManager.setUpdateStrategy(.lowPower)
-                            currentBatteryMode = .lowPower
-                        } label: {
-                            HStack {
-                                Text("Battery Saver")
-                                if currentBatteryMode == .lowPower {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                        
-                        Button {
-                            locationManager.setUpdateStrategy(.lightTracking)
-                            currentBatteryMode = .lightTracking
-                        } label: {
-                            HStack {
-                                Text("Light Tracking")
-                                if currentBatteryMode == .lightTracking {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                        
-                        Button {
-                            locationManager.setUpdateStrategy(.significantOnly)
-                            currentBatteryMode = .significantOnly
-                        } label: {
-                            HStack {
-                                Text("Minimal Updates")
-                                if currentBatteryMode == .significantOnly {
-                                    Spacer()
-                                    Image(systemName: "checkmark")
-                                }
-                            }
-                        }
-                    } label: {
-                        Image(systemName: batteryIconName)
-                            .font(.system(size: 20))
-                            .foregroundColor(batteryIconColor)
-                            .padding(12)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(20)
-                            .padding(8)
-                    }
-                }
-            }
         }
         .sheet(isPresented: $showNeighborhoodsList) {
             NeighborhoodsListView(fogOverlay: $fogOverlay, locationManager: locationManager)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
         }
-        .onChange(of: scenePhase) { newPhase in
-            if newPhase == .active {
-                locationManager.resumeLocationUpdates()
-            } else if newPhase == .background {
-                locationManager.pauseLocationUpdates()
+        .sheet(isPresented: $showDebugLogs) {
+            DebugLogsView()
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+// MARK: - Debug Logs View
+struct DebugLogsView: View {
+    @State private var logs: [String] = []
+    
+    var body: some View {
+        NavigationView {
+            List(logs, id: \.self) { log in
+                Text(log)
+                    .font(.system(.body, design: .monospaced))
             }
+            .navigationTitle("Debug Logs")
+            .navigationBarItems(trailing: Button("Clear") {
+                logs = []
+            })
         }
         .onAppear {
-            // Start with balanced mode by default
-            locationManager.setUpdateStrategy(.balanced)
-            currentBatteryMode = .balanced
+            // Start capturing logs
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("DebugLog"), object: nil, queue: .main) { notification in
+                if let log = notification.object as? String {
+                    logs.append(log)
+                }
+            }
         }
     }
-    
-    // Return appropriate battery icon based on current mode
-    private var batteryIconName: String {
-        switch currentBatteryMode {
-        case .highAccuracy:
-            return "battery.25"
-        case .balanced:
-            return "battery.50"
-        case .lowPower:
-            return "battery.75"
-        case .lightTracking:
-            return "battery.85.fill"
-        case .significantOnly:
-            return "battery.100"
-        }
-    }
-    
-    // Return appropriate color based on current mode
-    private var batteryIconColor: Color {
-        switch currentBatteryMode {
-        case .highAccuracy:
-            return .red
-        case .balanced:
-            return .yellow
-        case .lowPower:
-            return .green
-        case .lightTracking:
-            return .green
-        case .significantOnly:
-            return .green
-        }
+}
+
+// MARK: - Debug Logging
+extension ContentView {
+    static func debugLog(_ message: String) {
+        print(message)
+        NotificationCenter.default.post(name: NSNotification.Name("DebugLog"), object: message)
     }
 }
 

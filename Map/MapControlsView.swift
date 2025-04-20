@@ -15,6 +15,7 @@ struct MapControlsView: View {
     @Binding var currentNeighborhood: String
     @Binding var exploredPercentage: Double
     @Binding var showNeighborhoodsList: Bool
+    @Binding var showDebugLogs: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -58,6 +59,21 @@ struct MapControlsView: View {
             }
             
             Spacer()
+            
+            // Debug Logs Button
+            HStack {
+                Spacer()
+                Button(action: {
+                    showDebugLogs = true
+                }) {
+                    Image(systemName: "list.bullet")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding()
+                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                }
+                .padding(.trailing, 16)
+            }
             
             // Neighborhood and Explored Percentage
             Button(action: {
