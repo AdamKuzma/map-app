@@ -117,7 +117,6 @@ struct ContentView: View {
     @State private var currentNeighborhood = "New York"
     @State private var showNeighborhoodsList = false
     @State private var fogOverlay: FogOverlay?
-    @State private var showDebugLogs = false
     @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
@@ -141,8 +140,7 @@ struct ContentView: View {
                 isTestMode: $isTestMode,
                 currentNeighborhood: $currentNeighborhood,
                 exploredPercentage: $exploredPercentage,
-                showNeighborhoodsList: $showNeighborhoodsList,
-                showDebugLogs: $showDebugLogs
+                showNeighborhoodsList: $showNeighborhoodsList
             )
         }
         .sheet(isPresented: $showNeighborhoodsList) {
@@ -150,47 +148,9 @@ struct ContentView: View {
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $showDebugLogs) {
-            DebugLogsView()
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
-        }
     }
 }
 
-// MARK: - Debug Logs View
-struct DebugLogsView: View {
-    @State private var logs: [String] = []
-    
-    var body: some View {
-        NavigationView {
-            List(logs, id: \.self) { log in
-                Text(log)
-                    .font(.system(.body, design: .monospaced))
-            }
-            .navigationTitle("Debug Logs")
-            .navigationBarItems(trailing: Button("Clear") {
-                logs = []
-            })
-        }
-        .onAppear {
-            // Start capturing logs
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("DebugLog"), object: nil, queue: .main) { notification in
-                if let log = notification.object as? String {
-                    logs.append(log)
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Debug Logging
-extension ContentView {
-    static func debugLog(_ message: String) {
-        print(message)
-        NotificationCenter.default.post(name: NSNotification.Name("DebugLog"), object: message)
-    }
-}
 
 #Preview {
     ContentView()

@@ -18,7 +18,7 @@ class FogOverlay: UIView {
     
     // Maximum speed for revealing fog (in meters/second)
     // 2.0 m/s = 7.2 km/h (walking/jogging speed)
-    let maxWalkingSpeed: Double = 2.0
+    let maxWalkingSpeed: Double = 3.0
     
     // Cache for neighborhood percentages
     private var percentageCache: [String: Double] = [:]
@@ -83,65 +83,6 @@ class FogOverlay: UIView {
         
         return isInside
     }
-    
-    // Calculate the percentage of area explored for a specific neighborhood
-    // private func calculateNeighborhoodPercentage(_ boundary: [CLLocationCoordinate2D], locations: [CLLocationCoordinate2D]) -> Double {
-    //     let totalArea = calculatePolygonArea(boundary)
-        
-    //     // Create a grid to track explored points
-    //     let gridSize = 10 // meters
-    //     let gridWidth = Int(ceil(totalArea.squareRoot() / Double(gridSize)))
-    //     var exploredGrid = Array(repeating: Array(repeating: false, count: gridWidth), count: gridWidth)
-        
-    //     // Get bounds of neighborhood
-    //     let minLat = boundary.map { $0.latitude }.min() ?? 0
-    //     let maxLat = boundary.map { $0.latitude }.max() ?? 0
-    //     let minLon = boundary.map { $0.longitude }.min() ?? 0
-    //     let maxLon = boundary.map { $0.longitude }.max() ?? 0
-        
-    //     var pointsInside = 0
-    //     for location in locations {
-    //         if isPointInPolygon(location, polygon: boundary) {
-    //             pointsInside += 1
-                
-    //             // Convert location to grid coordinates
-    //             let latRatio = (location.latitude - minLat) / (maxLat - minLat)
-    //             let lonRatio = (location.longitude - minLon) / (maxLon - minLon)
-    //             let gridX = Int(lonRatio * Double(gridWidth))
-    //             let gridY = Int(latRatio * Double(gridWidth))
-                
-    //             // Mark points in the grid that are within the circle
-    //             let radiusInGrid = Int(ceil(baseRadius / Double(gridSize)))
-    //             for y in max(0, gridY - radiusInGrid)...min(gridWidth - 1, gridY + radiusInGrid) {
-    //                 for x in max(0, gridX - radiusInGrid)...min(gridWidth - 1, gridX + radiusInGrid) {
-    //                     let dx = Double(x - gridX) * Double(gridSize)
-    //                     let dy = Double(y - gridY) * Double(gridSize)
-    //                     if sqrt(dx*dx + dy*dy) <= baseRadius {
-    //                         exploredGrid[y][x] = true
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-        
-    //     // Count explored grid points
-    //     var exploredPoints = 0
-    //     for y in 0..<gridWidth {
-    //         for x in 0..<gridWidth {
-    //             if exploredGrid[y][x] {
-    //                 exploredPoints += 1
-    //             }
-    //         }
-    //     }
-        
-    //     // Calculate percentage based on grid points
-    //     let percentage = Double(exploredPoints) / Double(gridWidth * gridWidth) * 100
-        
-    //     print("Points inside boundary: \(pointsInside)")
-    //     print("Explored grid points: \(exploredPoints) out of \(gridWidth * gridWidth)")
-    //     print("Final percentage: \(percentage)%")
-    //     return percentage
-    // }
     
     // Calculate the percentage of area explored within the current neighborhood
     func calculateExploredPercentage() -> Double {
@@ -473,7 +414,17 @@ class FogOverlay: UIView {
         // Calculate zoom-dependent radius
         let zoomLevel = mapView.mapboxMap.cameraState.zoom
         let metersPerPixel = 78271.5170 / pow(2.0, zoomLevel)
-        let radiusInPoints = baseRadius / metersPerPixel
+        
+        // Calculate visual radius with zoom factor adjustment
+        // Grow circles when zoomed out (lower zoom level values mean more zoomed out)
+        let thresholdZoom = 14.0 // Start growing circles when below this zoom level (more zoomed out)
+        // When zoom level is below threshold (more zoomed out), apply the growth factor
+        let zoomDifference = max(0, thresholdZoom - zoomLevel)
+        let growthBase = 2.0 // Increase growth rate dramatically for more obvious effect
+        let zoomFactor = pow(growthBase, zoomDifference)
+        let visualRadius = baseRadius * zoomFactor
+        let radiusInPoints = visualRadius / metersPerPixel
+        
         
         // Calculate extended bounds to include points just outside visible area
         let extendedBounds = rect.insetBy(dx: -radiusInPoints * 2, dy: -radiusInPoints * 2)

@@ -86,7 +86,12 @@ struct MapBoxMapView: UIViewRepresentable {
             // Center on location if we haven't moved the map yet
             if mapView.mapboxMap.cameraState.center.latitude == 0 && 
                mapView.mapboxMap.cameraState.center.longitude == 0 {
-                let camera = CameraOptions(center: location, zoom: 15)
+                let camera = CameraOptions(
+                    center: location,
+                    zoom: 15,
+                    bearing: 0,
+                    pitch: 45 // Add 45-degree pitch for 3D view
+                )
                 mapView.mapboxMap.setCamera(to: camera)
             }
         }
@@ -94,6 +99,27 @@ struct MapBoxMapView: UIViewRepresentable {
         // Add Park Slope boundary after style is loaded
         context.coordinator.styleLoadedToken = mapView.mapboxMap.onStyleLoaded.observe { _ in
             addNeighborhoodBoundaries(to: mapView)
+            
+            // Enable 3D buildings with enhanced visibility
+            do {
+                // Make sure building layer is visible
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "visibility", value: "visible")
+                
+                // Increase extrusion height for more dramatic effect
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "extrusion-height", value: 2.0)
+                
+                // Add some color to make buildings more visible
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "fill-color", value: "#4a90e2")
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "fill-opacity", value: 0.8)
+                
+                // Enable shadows for better depth perception
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "fill-extrusion-ambient-occlusion", value: true)
+                try mapView.mapboxMap.setLayerProperty(for: "building", property: "fill-extrusion-ambient-occlusion-intensity", value: 0.3)
+                
+                print("Successfully enabled 3D buildings")
+            } catch {
+                print("Error enabling 3D buildings: \(error)")
+            }
         }
         
         // Start UI update timer for percentage only
@@ -259,21 +285,21 @@ struct MapBoxMapView: UIViewRepresentable {
     
     private func addNeighborhoodBoundaries(to mapView: MapboxMaps.MapView) {
         // Use lighter colors for each boundary
-        addBoundary(to: mapView, boundary: Neighborhoods.parkSlope.boundary, id: "park-slope", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.prospectPark.boundary, id: "prospect-park", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.greenwoodHeights.boundary, id: "greenwood-heights", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.gowanus.boundary, id: "gowanus", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.windsorTerrace.boundary, id: "windsor-terrace", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.carrollGardens.boundary, id: "carroll-gardens", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.cobbleHill.boundary, id: "cobble-hill", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.boeumHill.boundary, id: "boerum-hill", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.prospectHeights.boundary, id: "prospect-heights", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.crownHeights.boundary, id: "crown-heights", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.fortGreene.boundary, id: "fort-greene", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.columbiaWaterfront.boundary, id: "columbia-waterfront", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.brooklynHeights.boundary, id: "brooklyn-heights", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.dumbo.boundary, id: "dumbo", color: .blue)
-        addBoundary(to: mapView, boundary: Neighborhoods.downtownBrooklyn.boundary, id: "downtown-brooklyn", color: .blue)
+        addBoundary(to: mapView, boundary: Neighborhoods.parkSlope.boundary, id: "park-slope", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.prospectPark.boundary, id: "prospect-park", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.greenwoodHeights.boundary, id: "greenwood-heights", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.gowanus.boundary, id: "gowanus", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.windsorTerrace.boundary, id: "windsor-terrace", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.carrollGardens.boundary, id: "carroll-gardens", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.cobbleHill.boundary, id: "cobble-hill", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.boeumHill.boundary, id: "boerum-hill", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.prospectHeights.boundary, id: "prospect-heights", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.crownHeights.boundary, id: "crown-heights", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.fortGreene.boundary, id: "fort-greene", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.columbiaWaterfront.boundary, id: "columbia-waterfront", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.brooklynHeights.boundary, id: "brooklyn-heights", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.dumbo.boundary, id: "dumbo", color: .gray)
+        addBoundary(to: mapView, boundary: Neighborhoods.downtownBrooklyn.boundary, id: "downtown-brooklyn", color: .gray)
         print("Successfully added neighborhood boundaries with thinner, lighter lines")
     }
     
@@ -282,5 +308,18 @@ struct MapBoxMapView: UIViewRepresentable {
         options.puckType = .puck2D()
         options.puckBearingEnabled = true
         return options
+    }
+    
+    // Add method to toggle 3D view
+    func toggle3DView(_ mapView: MapboxMaps.MapView) {
+        let currentCamera = mapView.mapboxMap.cameraState
+        let newPitch = currentCamera.pitch == 0 ? 45.0 : 0.0
+        let camera = CameraOptions(
+            center: currentCamera.center,
+            zoom: currentCamera.zoom,
+            bearing: currentCamera.bearing,
+            pitch: newPitch
+        )
+        mapView.mapboxMap.setCamera(to: camera)
     }
 }

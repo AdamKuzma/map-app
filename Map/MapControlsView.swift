@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapboxMaps
 
 // MARK: - Map Controls View
 struct MapControlsView: View {
@@ -15,7 +16,7 @@ struct MapControlsView: View {
     @Binding var currentNeighborhood: String
     @Binding var exploredPercentage: Double
     @Binding var showNeighborhoodsList: Bool
-    @Binding var showDebugLogs: Bool
+    @State private var is3DEnabled = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -60,21 +61,6 @@ struct MapControlsView: View {
             
             Spacer()
             
-            // Debug Logs Button
-            HStack {
-                Spacer()
-                Button(action: {
-                    showDebugLogs = true
-                }) {
-                    Image(systemName: "list.bullet")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .padding()
-                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-                }
-                .padding(.trailing, 16)
-            }
-            
             // Neighborhood and Explored Percentage
             Button(action: {
                 showNeighborhoodsList = true
@@ -85,6 +71,34 @@ struct MapControlsView: View {
                     .padding()
                     .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
                     .padding(.bottom, 8)
+            }
+            
+            HStack {
+                Spacer()
+                VStack(spacing: 12) {
+                    // 3D View Toggle Button
+                    Button(action: {
+                        is3DEnabled.toggle()
+                        if let mapView = (UIApplication.shared.windows.first?.rootViewController?.view.subviews.first { $0 is MapboxMaps.MapView }) as? MapboxMaps.MapView {
+                            let currentCamera = mapView.mapboxMap.cameraState
+                            let newPitch = is3DEnabled ? 45.0 : 0.0
+                            let camera = CameraOptions(
+                                center: currentCamera.center,
+                                zoom: currentCamera.zoom,
+                                bearing: currentCamera.bearing,
+                                pitch: newPitch
+                            )
+                            mapView.mapboxMap.setCamera(to: camera)
+                        }
+                    }) {
+                        Image(systemName: is3DEnabled ? "view.3d" : "view.2d")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.black.opacity(0.7))
+                            .clipShape(Circle())
+                    }
+                }
             }
         }
     }
