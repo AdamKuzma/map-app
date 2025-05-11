@@ -5,6 +5,12 @@
 //  Created by Adam Kuzma on 3/20/25.
 //
 
+/// Context for Cursor AI:
+/// Use the latest SwiftUI syntax (as of Xcode 15, iOS 17).
+/// Use Mapbox Maps SDK v11+ for iOS (using `MapboxMaps` package).
+/// Prefer `.task`, `@State`, and `Observable` over older patterns.
+/// Assume the app uses Swift Concurrency (async/await), not Combine.
+
 import SwiftUI
 import MapboxMaps
 import CoreLocation
@@ -110,38 +116,52 @@ struct NeighborhoodsListView: View {
 // MARK: - Content View
 struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
-    @State private var isTestMode = false
-    @State private var isLocationTracking = false
     @State private var isExploreMode = true
     @State private var exploredPercentage = 0.0
     @State private var currentNeighborhood = "New York"
     @State private var showNeighborhoodsList = false
     @State private var fogOverlay: FogOverlay?
+    @State private var renderingMode: RenderingMode = .overlay
     @Environment(\.scenePhase) private var scenePhase
+    
+    enum RenderingMode: String, CaseIterable {
+        case overlay = "Overlay"
+        case mapbox = "Mapbox"
+    }
     
     var body: some View {
         ZStack {
             // Map View
             MapBoxMapView(
                 locationManager: locationManager,
-                isTestMode: $isTestMode,
-                isLocationTracking: $isLocationTracking,
                 isExploreMode: $isExploreMode,
                 exploredPercentage: $exploredPercentage,
                 currentNeighborhood: $currentNeighborhood,
-                fogOverlay: $fogOverlay
+                fogOverlay: $fogOverlay,
+                renderingMode: $renderingMode
             )
             .ignoresSafeArea()
             
             // Controls Overlay
-            MapControlsView(
-                isExploreMode: $isExploreMode,
-                isLocationTracking: $isLocationTracking,
-                isTestMode: $isTestMode,
-                currentNeighborhood: $currentNeighborhood,
-                exploredPercentage: $exploredPercentage,
-                showNeighborhoodsList: $showNeighborhoodsList
-            )
+            VStack(spacing: 0) {
+                // Rendering Mode Tabs
+                Picker("Rendering Mode", selection: $renderingMode) {
+                    ForEach(RenderingMode.allCases, id: \.self) { mode in
+                        Text(mode.rawValue).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                
+                // Main Controls
+                MapControlsView(
+                    isExploreMode: $isExploreMode,
+                    currentNeighborhood: $currentNeighborhood,
+                    exploredPercentage: $exploredPercentage,
+                    showNeighborhoodsList: $showNeighborhoodsList
+                )
+            }
         }
         .sheet(isPresented: $showNeighborhoodsList) {
             NeighborhoodsListView(fogOverlay: $fogOverlay, locationManager: locationManager)

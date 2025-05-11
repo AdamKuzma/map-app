@@ -24,6 +24,9 @@ class FogOverlay: UIView {
     private var percentageCache: [String: Double] = [:]
     private var lastCalculationLocations: [String: Int] = [:]
     
+    // Callback for when locations are added (for native 3D circles)
+    var onLocationAdded: (() -> Void)?
+    
     // Reset cache when the mode changes or on demand
     func resetPercentageCache() {
         percentageCache = [:]
@@ -311,9 +314,9 @@ class FogOverlay: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setMode(isExplore: Bool) {
-        isExploreMode = isExplore
-    }
+    // func setMode(isExplore: Bool) {
+    //     isExploreMode = isExplore
+    // }
     
     private func saveVisitedLocations() {
         let storedLocations = visitedLocations.map { StoredLocation(from: $0) }
@@ -372,6 +375,9 @@ class FogOverlay: UIView {
                 // Force a redraw
                 DispatchQueue.main.async {
                     self.setNeedsDisplay()
+                    
+                    // Notify for native 3D circle updates
+                    self.onLocationAdded?()
                 }
             }
         } else {
@@ -415,16 +421,19 @@ class FogOverlay: UIView {
         let zoomLevel = mapView.mapboxMap.cameraState.zoom
         let metersPerPixel = 78271.5170 / pow(2.0, zoomLevel)
         
+        // Use constant radius (commented out zoom-based adjustment)
         // Calculate visual radius with zoom factor adjustment
         // Grow circles when zoomed out (lower zoom level values mean more zoomed out)
-        let thresholdZoom = 14.0 // Start growing circles when below this zoom level (more zoomed out)
+        // let thresholdZoom = 14.0 // Start growing circles when below this zoom level (more zoomed out)
         // When zoom level is below threshold (more zoomed out), apply the growth factor
-        let zoomDifference = max(0, thresholdZoom - zoomLevel)
-        let growthBase = 2.0 // Increase growth rate dramatically for more obvious effect
-        let zoomFactor = pow(growthBase, zoomDifference)
-        let visualRadius = baseRadius * zoomFactor
-        let radiusInPoints = visualRadius / metersPerPixel
+        // let zoomDifference = max(0, thresholdZoom - zoomLevel)
+        // let growthBase = 2.0 // Increase growth rate dramatically for more obvious effect
+        // let zoomFactor = pow(growthBase, zoomDifference)
+        // let visualRadius = baseRadius * zoomFactor
         
+        // Use constant radius regardless of zoom level
+        let visualRadius = baseRadius
+        let radiusInPoints = visualRadius / metersPerPixel
         
         // Calculate extended bounds to include points just outside visible area
         let extendedBounds = rect.insetBy(dx: -radiusInPoints * 2, dy: -radiusInPoints * 2)
