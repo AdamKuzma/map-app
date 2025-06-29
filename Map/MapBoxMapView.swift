@@ -337,12 +337,12 @@ struct MapBoxMapView: UIViewRepresentable {
         // Use lighter colors for each boundary
         addBoundary(to: mapView, boundary: Neighborhoods.parkSlope.boundary, id: "park-slope")
         addBoundary(to: mapView, boundary: Neighborhoods.prospectPark.boundary, id: "prospect-park")
-        addBoundary(to: mapView, boundary: Neighborhoods.greenwoodHeights.boundary, id: "greenwood-heights")
         addBoundary(to: mapView, boundary: Neighborhoods.gowanus.boundary, id: "gowanus")
         addBoundary(to: mapView, boundary: Neighborhoods.windsorTerrace.boundary, id: "windsor-terrace")
         addBoundary(to: mapView, boundary: Neighborhoods.carrollGardens.boundary, id: "carroll-gardens")
         addBoundary(to: mapView, boundary: Neighborhoods.cobbleHill.boundary, id: "cobble-hill")
-        addBoundary(to: mapView, boundary: Neighborhoods.boeumHill.boundary, id: "boerum-hill")
+        addBoundary(to: mapView, boundary: Neighborhoods.boerumHill.boundary, id: "boerum-hill")
+        addBoundary(to: mapView, boundary: Neighborhoods.clintonHill.boundary, id: "clinton-hill")
         addBoundary(to: mapView, boundary: Neighborhoods.prospectHeights.boundary, id: "prospect-heights")
         addBoundary(to: mapView, boundary: Neighborhoods.crownHeights.boundary, id: "crown-heights")
         addBoundary(to: mapView, boundary: Neighborhoods.fortGreene.boundary, id: "fort-greene")
@@ -350,25 +350,65 @@ struct MapBoxMapView: UIViewRepresentable {
         addBoundary(to: mapView, boundary: Neighborhoods.brooklynHeights.boundary, id: "brooklyn-heights")
         addBoundary(to: mapView, boundary: Neighborhoods.dumbo.boundary, id: "dumbo")
         addBoundary(to: mapView, boundary: Neighborhoods.downtownBrooklyn.boundary, id: "downtown-brooklyn")
+        addBoundary(to: mapView, boundary: Neighborhoods.vinegarHill.boundary, id: "vinegar-hill")
+        addBoundary(to: mapView, boundary: Neighborhoods.greenwoodCemetery.boundary, id: "greenwood-cemetery")
+        addBoundary(to: mapView, boundary: Neighborhoods.sunsetPark.boundary, id: "sunset-park")
+        addBoundary(to: mapView, boundary: Neighborhoods.redHook.boundary, id: "red-hook")
+        addBoundary(to: mapView, boundary: Neighborhoods.prospectLeffertsGardens.boundary, id: "prospect-lefferts-gardens")
+        addBoundary(to: mapView, boundary: Neighborhoods.flatbush.boundary, id: "flatbush")
+        addBoundary(to: mapView, boundary: Neighborhoods.kensington.boundary, id: "kensington")
+        addBoundary(to: mapView, boundary: Neighborhoods.boroughPark.boundary, id: "borough-park")
+        addBoundary(to: mapView, boundary: Neighborhoods.bedfordStuyvensant.boundary, id: "bedford-stuyvensant")
+        addBoundary(to: mapView, boundary: Neighborhoods.dykerHeights.boundary, id: "dyker-heights")
+        addBoundary(to: mapView, boundary: Neighborhoods.bensonhurst.boundary, id: "bensonhurst")
+        addBoundary(to: mapView, boundary: Neighborhoods.bathBeach.boundary, id: "bath-beach")
+        addBoundary(to: mapView, boundary: Neighborhoods.bayRidge.boundary, id: "bay-ridge")
+        addBoundary(to: mapView, boundary: Neighborhoods.fortHamilton.boundary, id: "fort-hamilton")
         print("Successfully added neighborhood boundaries with thinner, lighter lines")
         
         // Always add neighborhood boundaries as lines after fills
         let allNeighborhoods: [(String, Neighborhood)] = [
             ("park-slope", Neighborhoods.parkSlope),
             ("prospect-park", Neighborhoods.prospectPark),
-            ("greenwood-heights", Neighborhoods.greenwoodHeights),
             ("gowanus", Neighborhoods.gowanus),
             ("windsor-terrace", Neighborhoods.windsorTerrace),
             ("carroll-gardens", Neighborhoods.carrollGardens),
             ("cobble-hill", Neighborhoods.cobbleHill),
-            ("boerum-hill", Neighborhoods.boeumHill),
+            ("boerum-hill", Neighborhoods.boerumHill),
+            ("clinton-hill", Neighborhoods.clintonHill),
             ("prospect-heights", Neighborhoods.prospectHeights),
             ("crown-heights", Neighborhoods.crownHeights),
             ("fort-greene", Neighborhoods.fortGreene),
             ("columbia-waterfront", Neighborhoods.columbiaWaterfront),
             ("brooklyn-heights", Neighborhoods.brooklynHeights),
             ("dumbo", Neighborhoods.dumbo),
-            ("downtown-brooklyn", Neighborhoods.downtownBrooklyn)
+            ("downtown-brooklyn", Neighborhoods.downtownBrooklyn),
+            ("vinegar-hill", Neighborhoods.vinegarHill),
+            ("williamsburg", Neighborhoods.williamsburg),
+            ("greenpoint", Neighborhoods.greenpoint),
+            ("bushwick", Neighborhoods.bushwick),
+            ("greenwood-cemetery", Neighborhoods.greenwoodCemetery),
+            ("sunset-park", Neighborhoods.sunsetPark),
+            ("red-hook", Neighborhoods.redHook),
+            ("prospect-lefferts-gardens", Neighborhoods.prospectLeffertsGardens),
+            ("flatbush", Neighborhoods.flatbush),
+            ("kensington", Neighborhoods.kensington),
+            ("borough-park", Neighborhoods.boroughPark),
+            ("bedford-stuyvensant", Neighborhoods.bedfordStuyvensant),
+            ("dyker-heights", Neighborhoods.dykerHeights),
+            ("bensonhurst", Neighborhoods.bensonhurst),
+            ("bath-beach", Neighborhoods.bathBeach),
+            ("bay-ridge", Neighborhoods.bayRidge),
+            ("fort-hamilton", Neighborhoods.fortHamilton),
+            ("gravesend", Neighborhoods.gravesend),
+            ("midwood", Neighborhoods.midwood),
+            ("sheepshead-bay", Neighborhoods.sheepsheadBay),
+            ("financial-district", Neighborhoods.financialDistrict),
+            ("battery-park", Neighborhoods.batteryPark),
+            ("tribeca", Neighborhoods.tribeca),
+            ("two-bridges", Neighborhoods.twoBridges),
+            ("civic-center", Neighborhoods.civicCenter),
+            ("chinatown", Neighborhoods.chinatown)
         ]
         for (id, neighborhood) in allNeighborhoods {
             addBoundary(to: mapView, boundary: neighborhood.boundary, id: id)
