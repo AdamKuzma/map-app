@@ -20,10 +20,14 @@ struct MapControlsView: View {
     @Binding var currentNeighborhood: String
     @Binding var exploredPercentage: Double
     @Binding var showNeighborhoodsList: Bool
+    @Binding var currentZoomLevel: Double
     
     var body: some View {
         VStack(spacing: 0) {
             // Top Bar View
+            HStack {
+                Spacer()
+            }
             
             Spacer()
             

@@ -414,22 +414,14 @@ class FogOverlay: UIView {
               let mapView = mapView else { return }
         
         // Draw black background
-        context.setFillColor(UIColor.black.withAlphaComponent(0.7).cgColor)
+        context.setFillColor(UIColor.black.withAlphaComponent(0.26).cgColor) // Fog Opacity Value
         context.fill(rect)
         
-        // Calculate zoom-dependent radius
-        let zoomLevel = mapView.mapboxMap.cameraState.zoom
+        // Get camera state to handle pitch
+        let cameraState = mapView.mapboxMap.cameraState
+        let pitch = cameraState.pitch
+        let zoomLevel = cameraState.zoom
         let metersPerPixel = 78271.5170 / pow(2.0, zoomLevel)
-        
-        // Use constant radius (commented out zoom-based adjustment)
-        // Calculate visual radius with zoom factor adjustment
-        // Grow circles when zoomed out (lower zoom level values mean more zoomed out)
-        // let thresholdZoom = 14.0 // Start growing circles when below this zoom level (more zoomed out)
-        // When zoom level is below threshold (more zoomed out), apply the growth factor
-        // let zoomDifference = max(0, thresholdZoom - zoomLevel)
-        // let growthBase = 2.0 // Increase growth rate dramatically for more obvious effect
-        // let zoomFactor = pow(growthBase, zoomDifference)
-        // let visualRadius = baseRadius * zoomFactor
         
         // Use constant radius regardless of zoom level
         let visualRadius = baseRadius
@@ -448,36 +440,95 @@ class FogOverlay: UIView {
         // Draw trail with same radius for all locations
         for location in locations {
             let point = mapView.mapboxMap.point(for: location)
+            
             // Validate point is within reasonable bounds and is valid
             if point.x.isFinite && point.y.isFinite &&
                point.x >= extendedBounds.minX && point.x <= extendedBounds.maxX &&
                point.y >= extendedBounds.minY && point.y <= extendedBounds.maxY &&
                !(point.x < 0 && point.y < 0) { // Prevent top-left corner issue
-                let circlePath = UIBezierPath(arcCenter: point,
-                                            radius: radiusInPoints,
-                                            startAngle: 0,
-                                            endAngle: 2 * .pi,
-                                            clockwise: true)
-                context.addPath(circlePath.cgPath)
-                context.fillPath()
+                
+                if pitch > 0 {
+                    // When map is pitched, adjust the circle to appear as an ellipse
+                    // The ellipse should be more elongated as the pitch increases
+                    let pitchFactor = cos(pitch * .pi / 180.0)
+                    let horizontalRadius = radiusInPoints
+                    let verticalRadius = radiusInPoints * pitchFactor
+                    
+                    // Create an elliptical path that mimics the pitched circle on the ground
+                    let ellipsePath = UIBezierPath(ovalIn: CGRect(
+                        x: point.x - horizontalRadius,
+                        y: point.y - verticalRadius,
+                        width: horizontalRadius * 2,
+                        height: verticalRadius * 2))
+                    
+                    // Apply rotation based on map bearing to properly orient the ellipse
+                    let bearing = cameraState.bearing
+                    let rotationTransform = CGAffineTransform(rotationAngle: CGFloat(bearing * .pi / 180.0))
+                    context.saveGState()
+                    context.translateBy(x: point.x, y: point.y)
+                    context.concatenate(rotationTransform)
+                    context.translateBy(x: -point.x, y: -point.y)
+                    
+                    context.addPath(ellipsePath.cgPath)
+                    context.fillPath()
+                    context.restoreGState()
+                } else {
+                    // Standard circle for non-pitched view
+                    let circlePath = UIBezierPath(arcCenter: point,
+                                                radius: radiusInPoints,
+                                                startAngle: 0,
+                                                endAngle: 2 * .pi,
+                                                clockwise: true)
+                    context.addPath(circlePath.cgPath)
+                    context.fillPath()
+                }
             }
         }
         
         // Draw current location with full radius
         if let currentLocation = currentLocation {
             let point = mapView.mapboxMap.point(for: currentLocation)
+            
             // Validate point is within reasonable bounds and is valid
             if point.x.isFinite && point.y.isFinite &&
                point.x >= extendedBounds.minX && point.x <= extendedBounds.maxX &&
                point.y >= extendedBounds.minY && point.y <= extendedBounds.maxY &&
                !(point.x < 0 && point.y < 0) { // Prevent top-left corner issue
-                let circlePath = UIBezierPath(arcCenter: point,
-                                            radius: radiusInPoints,
-                                            startAngle: 0,
-                                            endAngle: 2 * .pi,
-                                            clockwise: true)
-                context.addPath(circlePath.cgPath)
-                context.fillPath()
+                
+                if pitch > 0 {
+                    // When map is pitched, adjust the circle to appear as an ellipse
+                    let pitchFactor = cos(pitch * .pi / 180.0)
+                    let horizontalRadius = radiusInPoints
+                    let verticalRadius = radiusInPoints * pitchFactor
+                    
+                    // Create an elliptical path that mimics the pitched circle on the ground
+                    let ellipsePath = UIBezierPath(ovalIn: CGRect(
+                        x: point.x - horizontalRadius,
+                        y: point.y - verticalRadius,
+                        width: horizontalRadius * 2,
+                        height: verticalRadius * 2))
+                    
+                    // Apply rotation based on map bearing to properly orient the ellipse
+                    let bearing = cameraState.bearing
+                    let rotationTransform = CGAffineTransform(rotationAngle: CGFloat(bearing * .pi / 180.0))
+                    context.saveGState()
+                    context.translateBy(x: point.x, y: point.y)
+                    context.concatenate(rotationTransform)
+                    context.translateBy(x: -point.x, y: -point.y)
+                    
+                    context.addPath(ellipsePath.cgPath)
+                    context.fillPath()
+                    context.restoreGState()
+                } else {
+                    // Standard circle for non-pitched view
+                    let circlePath = UIBezierPath(arcCenter: point,
+                                                radius: radiusInPoints,
+                                                startAngle: 0,
+                                                endAngle: 2 * .pi,
+                                                clockwise: true)
+                    context.addPath(circlePath.cgPath)
+                    context.fillPath()
+                }
             }
         }
     }

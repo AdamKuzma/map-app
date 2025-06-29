@@ -122,6 +122,7 @@ struct ContentView: View {
     @State private var showNeighborhoodsList = false
     @State private var fogOverlay: FogOverlay?
     @State private var renderingMode: RenderingMode = .overlay
+    @State private var currentZoomLevel: Double = 0.0
     @Environment(\.scenePhase) private var scenePhase
     
     enum RenderingMode: String, CaseIterable {
@@ -138,29 +139,31 @@ struct ContentView: View {
                 exploredPercentage: $exploredPercentage,
                 currentNeighborhood: $currentNeighborhood,
                 fogOverlay: $fogOverlay,
-                renderingMode: $renderingMode
+                renderingMode: $renderingMode,
+                currentZoomLevel: $currentZoomLevel
             )
             .ignoresSafeArea()
             
             // Controls Overlay
             VStack(spacing: 0) {
                 // Rendering Mode Tabs
-                Picker("Rendering Mode", selection: $renderingMode) {
-                    ForEach(RenderingMode.allCases, id: \.self) { mode in
-                        Text(mode.rawValue).tag(mode)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                .padding(.top, 8)
+                // Picker("Rendering Mode", selection: $renderingMode) {
+                //     ForEach(RenderingMode.allCases, id: \.self) { mode in
+                //         Text(mode.rawValue).tag(mode)
+                //     }
+                // }
+                // .pickerStyle(.segmented)
+                // .padding(.horizontal)
+                // .padding(.top, 8)
                 
                 // Main Controls
-                MapControlsView(
-                    isExploreMode: $isExploreMode,
-                    currentNeighborhood: $currentNeighborhood,
-                    exploredPercentage: $exploredPercentage,
-                    showNeighborhoodsList: $showNeighborhoodsList
-                )
+            MapControlsView(
+                isExploreMode: $isExploreMode,
+                currentNeighborhood: $currentNeighborhood,
+                exploredPercentage: $exploredPercentage,
+                showNeighborhoodsList: $showNeighborhoodsList,
+                currentZoomLevel: $currentZoomLevel
+            )
             }
         }
         .sheet(isPresented: $showNeighborhoodsList) {
