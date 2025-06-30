@@ -26,6 +26,8 @@ struct MapBoxMapView: UIViewRepresentable {
         weak var fogOverlay: FogOverlay?
         // Track last state to prevent unnecessary layer updates
         var lastFogShouldBeHidden: Bool? = nil
+        // Track if we've already centered on the user
+        var hasCenteredOnUser = false
         
         func stopUpdateTimer() {
             updateUITimer?.invalidate()
@@ -185,9 +187,8 @@ struct MapBoxMapView: UIViewRepresentable {
                 // }
             }
             
-            // Center on location if we haven't moved the map yet
-            if mapView.mapboxMap.cameraState.center.latitude == 0 && 
-               mapView.mapboxMap.cameraState.center.longitude == 0 {
+            // Center on user location the first time we get a valid location
+            if !context.coordinator.hasCenteredOnUser {
                 let camera = CameraOptions(
                     center: location,
                     zoom: 14
@@ -195,6 +196,7 @@ struct MapBoxMapView: UIViewRepresentable {
                     // pitch: 45.0  // Set default pitch for 3D view (commented out)
                 )
                 mapView.mapboxMap.setCamera(to: camera)
+                context.coordinator.hasCenteredOnUser = true
             }
         }
         
