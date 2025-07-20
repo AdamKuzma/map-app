@@ -84,48 +84,10 @@ struct NeighborhoodsListView: View {
             // Batch update percentages to reduce UI updates
             var updatedPercentages: [String: Double] = [:]
             
-            // Calculate percentages for each neighborhood
-            updatedPercentages["Park Slope"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.parkSlope)
-            updatedPercentages["Prospect Park"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.prospectPark)
-            updatedPercentages["Greenwood Cemetery"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.greenwoodCemetery)
-            updatedPercentages["Sunset Park"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.sunsetPark)
-            updatedPercentages["Gowanus"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.gowanus)
-            updatedPercentages["Windsor Terrace"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.windsorTerrace)
-            updatedPercentages["Carroll Gardens"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.carrollGardens)
-            updatedPercentages["Cobble Hill"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.cobbleHill)
-            updatedPercentages["Boerum Hill"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.boerumHill)
-            updatedPercentages["Prospect Heights"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.prospectHeights)
-            updatedPercentages["Crown Heights"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.crownHeights)
-            updatedPercentages["Fort Greene"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.fortGreene)
-            updatedPercentages["Columbia Waterfront"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.columbiaWaterfront)
-            updatedPercentages["Brooklyn Heights"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.brooklynHeights)
-            updatedPercentages["Dumbo"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.dumbo)
-            updatedPercentages["Downtown Brooklyn"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.downtownBrooklyn)
-            updatedPercentages["Vinegar Hill"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.vinegarHill)
-            updatedPercentages["Clinton Hill"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.clintonHill)
-            updatedPercentages["Red Hook"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.redHook)
-            updatedPercentages["Prospect Lefferts Gardens"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.prospectLeffertsGardens)
-            updatedPercentages["Flatbush"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.flatbush)
-            updatedPercentages["Kensington"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.kensington)
-            updatedPercentages["Borough Park"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.boroughPark)
-            updatedPercentages["Bedford Stuyvensant"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.bedfordStuyvensant)
-            updatedPercentages["Dyker Heights"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.dykerHeights)
-            updatedPercentages["Bensonhurst"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.bensonhurst)
-            updatedPercentages["Bath Beach"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.bathBeach)
-            updatedPercentages["Bay Ridge"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.bayRidge)
-            updatedPercentages["Fort Hamilton"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.fortHamilton)
-            updatedPercentages["Williamsburg"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.williamsburg)
-            updatedPercentages["Greenpoint"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.greenpoint)
-            updatedPercentages["Bushwick"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.bushwick)
-            updatedPercentages["Gravesend"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.gravesend)
-            updatedPercentages["Midwood"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.midwood)
-            updatedPercentages["Sheepshead Bay"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.sheepsheadBay)
-            updatedPercentages["Financial District"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.financialDistrict)
-            updatedPercentages["Battery Park"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.batteryPark)
-            updatedPercentages["Tribeca"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.tribeca)
-            updatedPercentages["Two Bridges"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.twoBridges)
-            updatedPercentages["Civic Center"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.civicCenter)
-            updatedPercentages["Chinatown"] = overlay.calculateNeighborhoodPercentage(Neighborhoods.chinatown)
+            // Calculate percentages for each neighborhood using a for loop
+            for neighborhood in Neighborhoods.getAllNeighborhoods() {
+                updatedPercentages[neighborhood.name] = overlay.calculateNeighborhoodPercentage(neighborhood)
+            }
             
             // Update state with all percentages at once
             neighborhoodPercentages = updatedPercentages

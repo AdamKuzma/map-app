@@ -2,6 +2,7 @@ import CoreLocation
 
 struct Neighborhood {
     let name: String
+    let borough: String
     let boundary: [CLLocationCoordinate2D]
     
     func contains(_ location: CLLocationCoordinate2D) -> Bool {
@@ -29,6 +30,7 @@ struct Neighborhood {
 enum Neighborhoods {
     static let parkSlope = Neighborhood(
         name: "Park Slope",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.665352137686654, longitude: -73.99293758984828),
             CLLocationCoordinate2D(latitude: 40.664681723104664, longitude: -73.99182464037524),
@@ -54,6 +56,7 @@ enum Neighborhoods {
     
     static let prospectPark = Neighborhood(
         name: "Prospect Park",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.66101474948019, longitude: -73.97987422126666),
             CLLocationCoordinate2D(latitude: 40.65845783699416, longitude: -73.9746308502394),
@@ -77,49 +80,9 @@ enum Neighborhoods {
         ]
     )
     
-    static let greenwoodHeights = Neighborhood(
-        name: "Greenwood Heights",
-        boundary: [
-            CLLocationCoordinate2D(latitude: 40.65744861238801, longitude: -73.9830853815771),
-            CLLocationCoordinate2D(latitude: 40.658914393929535, longitude: -73.98518184408125),
-            CLLocationCoordinate2D(latitude: 40.66036873188298, longitude: -73.98725512688027),
-            CLLocationCoordinate2D(latitude: 40.66122633728625, longitude: -73.98786238836223),
-            CLLocationCoordinate2D(latitude: 40.662218616516185, longitude: -73.98857505279092),
-            CLLocationCoordinate2D(latitude: 40.66284311360204, longitude: -73.98912805462754),
-            CLLocationCoordinate2D(latitude: 40.6633974294694, longitude: -73.98973777016094),
-            CLLocationCoordinate2D(latitude: 40.66668818191641, longitude: -73.99515411305404),
-            CLLocationCoordinate2D(latitude: 40.668026236564714, longitude: -73.99623731186375),
-            CLLocationCoordinate2D(latitude: 40.67158026050953, longitude: -73.99843011677356),
-            CLLocationCoordinate2D(latitude: 40.66971738479006, longitude: -73.9988896916896),
-            CLLocationCoordinate2D(latitude: 40.66937393169118, longitude: -73.9982345520454),
-            CLLocationCoordinate2D(latitude: 40.668811832667274, longitude: -73.99861914719874),
-            CLLocationCoordinate2D(latitude: 40.66733053191703, longitude: -74.00001658467099),
-            CLLocationCoordinate2D(latitude: 40.66743809910247, longitude: -74.00031572475609),
-            CLLocationCoordinate2D(latitude: 40.66646461861296, longitude: -74.0022138220156),
-            CLLocationCoordinate2D(latitude: 40.663991314788234, longitude: -73.99791857871652),
-            CLLocationCoordinate2D(latitude: 40.65964096395882, longitude: -74.00246605909746),
-            CLLocationCoordinate2D(latitude: 40.660940454222754, longitude: -74.00463850851956),
-            CLLocationCoordinate2D(latitude: 40.660797422391425, longitude: -74.00486792708153),
-            CLLocationCoordinate2D(latitude: 40.65538477450718, longitude: -74.01050862756867),
-            CLLocationCoordinate2D(latitude: 40.657619446515554, longitude: -74.01422515719713),
-            CLLocationCoordinate2D(latitude: 40.657538027156335, longitude: -74.01436314783241),
-            CLLocationCoordinate2D(latitude: 40.64594437920192, longitude: -73.99510902620813),
-            CLLocationCoordinate2D(latitude: 40.64706406259819, longitude: -73.9939152013399),
-            CLLocationCoordinate2D(latitude: 40.64971887655267, longitude: -73.99823475979247),
-            CLLocationCoordinate2D(latitude: 40.65027308526649, longitude: -73.99764125418243),
-            CLLocationCoordinate2D(latitude: 40.652929139683664, longitude: -74.0020563863486),
-            CLLocationCoordinate2D(latitude: 40.65960466814445, longitude: -73.99513931677762),
-            CLLocationCoordinate2D(latitude: 40.65823253404537, longitude: -73.99294152126518),
-            CLLocationCoordinate2D(latitude: 40.65880160776288, longitude: -73.99235177528173),
-            CLLocationCoordinate2D(latitude: 40.65748437847864, longitude: -73.99014832534078),
-            CLLocationCoordinate2D(latitude: 40.659134339555436, longitude: -73.9884067138731),
-            CLLocationCoordinate2D(latitude: 40.65652876775874, longitude: -73.98402425718265),
-            CLLocationCoordinate2D(latitude: 40.65744861238801, longitude: -73.9830853815771)
-        ]
-    )
-    
     static let gowanus = Neighborhood(
         name: "Gowanus",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.6653569411105, longitude: -73.99293851638643),
             CLLocationCoordinate2D(latitude: 40.67213529070412, longitude: -73.98727704168701),
@@ -137,6 +100,7 @@ enum Neighborhoods {
     
     static let windsorTerrace = Neighborhood(
         name: "Windsor Terrace",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.65923606861469, longitude: -73.98842735437232),
             CLLocationCoordinate2D(latitude: 40.65527704975918, longitude: -73.9818227682947),
@@ -155,6 +119,7 @@ enum Neighborhoods {
     
     static let carrollGardens = Neighborhood(
         name: "Carroll Gardens",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.67248270254464, longitude: -73.99899006858472),
             CLLocationCoordinate2D(latitude: 40.67746248646688, longitude: -73.9964703072213),
@@ -171,6 +136,7 @@ enum Neighborhoods {
     
     static let cobbleHill = Neighborhood(
         name: "Cobble Hill",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.68528940691078, longitude: -74.00081170835507),
             CLLocationCoordinate2D(latitude: 40.683744146574384, longitude: -73.995235197227),
@@ -187,6 +153,7 @@ enum Neighborhoods {
     
     static let boerumHill = Neighborhood(
         name: "Boerum Hill",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.691007857720365, longitude: -73.99173603224808),
             CLLocationCoordinate2D(latitude: 40.689701511010696, longitude: -73.99236761757282),
@@ -210,6 +177,7 @@ enum Neighborhoods {
     
     static let prospectHeights = Neighborhood(
         name: "Prospect Heights",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.68404841359842, longitude: -73.97748449701628),
             CLLocationCoordinate2D(latitude: 40.6732602197701, longitude: -73.96954530302868),
@@ -224,6 +192,7 @@ enum Neighborhoods {
     
     static let crownHeights = Neighborhood(
         name: "Crown Heights",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.6811008982142, longitude: -73.96433342303972),
             CLLocationCoordinate2D(latitude: 40.672197561763255, longitude: -73.96270835730932),
@@ -242,6 +211,7 @@ enum Neighborhoods {
     
     static let fortGreene = Neighborhood(
         name: "Fort Greene",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.687374081234026, longitude: -73.97984321093655),
             CLLocationCoordinate2D(latitude: 40.684054020462696, longitude: -73.97743427228468),
@@ -258,6 +228,7 @@ enum Neighborhoods {
     
     static let columbiaWaterfront = Neighborhood(
         name: "Columbia Waterfront",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.679419880486506, longitude: -74.00362345633253),
             CLLocationCoordinate2D(latitude: 40.68959271840083, longitude: -73.99876562064696),
@@ -279,6 +250,7 @@ enum Neighborhoods {
     
     static let brooklynHeights = Neighborhood(
         name: "Brooklyn Heights",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.69164897676177, longitude: -73.99956902094064),
             CLLocationCoordinate2D(latitude: 40.689696530770476, longitude: -73.99236558033483),
@@ -317,6 +289,7 @@ enum Neighborhoods {
     
     static let dumbo = Neighborhood(
         name: "Dumbo",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.702333792404545, longitude: -73.99299455466902),
             CLLocationCoordinate2D(latitude: 40.70066172000375, longitude: -73.99086996113037),
@@ -356,6 +329,7 @@ enum Neighborhoods {
     
     static let downtownBrooklyn = Neighborhood(
         name: "Downtown Brooklyn",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.7006586486024, longitude: -73.99086692221015),
             CLLocationCoordinate2D(latitude: 40.70017032348747, longitude: -73.99080978268886),
@@ -380,6 +354,7 @@ enum Neighborhoods {
     
     static let vinegarHill = Neighborhood(
         name: "Vinegar Hill",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.69851408855928, longitude: -73.98574230173044),
             CLLocationCoordinate2D(latitude: 40.69828022584667, longitude: -73.98053866814531),
@@ -398,6 +373,7 @@ enum Neighborhoods {
     
     static let clintonHill = Neighborhood(
         name: "Clinton Hill",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.69787167082063, longitude: -73.97073321745923),
             CLLocationCoordinate2D(latitude: 40.68181469931625, longitude: -73.96759954610245),
@@ -410,6 +386,7 @@ enum Neighborhoods {
     
     static let greenwoodCemetery = Neighborhood(
         name: "Greenwood Cemetery",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.652973152598435, longitude: -74.00213169799322),
             CLLocationCoordinate2D(latitude: 40.650314148022346, longitude: -73.99775860944499),
@@ -429,6 +406,7 @@ enum Neighborhoods {
     
     static let sunsetPark = Neighborhood(
         name: "Sunset Park",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.66708246958103, longitude: -73.99593636982465),
             CLLocationCoordinate2D(latitude: 40.66556368273274, longitude: -73.99624180688107),
@@ -457,6 +435,7 @@ enum Neighborhoods {
     
     static let redHook = Neighborhood(
         name: "Red Hook",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.68327582595961, longitude: -74.00609139695918),
             CLLocationCoordinate2D(latitude: 40.68404054252869, longitude: -74.00717190068217),
@@ -506,6 +485,7 @@ enum Neighborhoods {
     
     static let prospectLeffertsGardens = Neighborhood(
         name: "Prospect Lefferts Gardens",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.66325818194639, longitude: -73.96182399078316),
             CLLocationCoordinate2D(latitude: 40.66318900312467, longitude: -73.96227998295055),
@@ -525,6 +505,7 @@ enum Neighborhoods {
     
     static let flatbush = Neighborhood(
         name: "Flatbush",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.65109994121477, longitude: -73.97225545558602),
             CLLocationCoordinate2D(latitude: 40.631944949411974, longitude: -73.9666880406854),
@@ -542,6 +523,7 @@ enum Neighborhoods {
     
     static let kensington = Neighborhood(
         name: "Kensington",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.644137747277426, longitude: -73.98907395078791),
             CLLocationCoordinate2D(latitude: 40.638492825752394, longitude: -73.97969356985809),
@@ -557,6 +539,7 @@ enum Neighborhoods {
     
     static let boroughPark = Neighborhood(
         name: "Borough Park",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.632613438243624, longitude: -74.01249313708263),
             CLLocationCoordinate2D(latitude: 40.60882530528667, longitude: -73.97299408057377),
@@ -571,6 +554,7 @@ enum Neighborhoods {
     
     static let bedfordStuyvensant = Neighborhood(
         name: "Bedford Stuyvensant",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.698175485621675, longitude: -73.96183016886765),
             CLLocationCoordinate2D(latitude: 40.67985254489648, longitude: -73.95814525719429),
@@ -586,6 +570,7 @@ enum Neighborhoods {
     
     static let dykerHeights = Neighborhood(
         name: "Dyker Heights",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.60389447748557, longitude: -74.01945326649053),
             CLLocationCoordinate2D(latitude: 40.604800888526626, longitude: -74.01777863513847),
@@ -605,6 +590,7 @@ enum Neighborhoods {
     
     static let bensonhurst = Neighborhood(
         name: "Bensonhurst",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.61275872978496, longitude: -74.01174530257865),
             CLLocationCoordinate2D(latitude: 40.60191546619649, longitude: -73.99381111381567),
@@ -618,6 +604,7 @@ enum Neighborhoods {
     
     static let bathBeach = Neighborhood(
         name: "Bath Beach",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.60311991455927, longitude: -74.01996440825371),
             CLLocationCoordinate2D(latitude: 40.603284490060304, longitude: -74.01771791555633),
@@ -642,6 +629,7 @@ enum Neighborhoods {
     
     static let bayRidge = Neighborhood(
         name: "Bay Ridge",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.61849290503653, longitude: -74.02117658262983),
             CLLocationCoordinate2D(latitude: 40.63393141818682, longitude: -74.01480472491446),
@@ -665,6 +653,7 @@ enum Neighborhoods {
     
     static let fortHamilton = Neighborhood(
         name: "Fort Hamilton",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.62594762295734, longitude: -74.04156745258581),
             CLLocationCoordinate2D(latitude: 40.62272695945197, longitude: -74.04157336744724),
@@ -692,6 +681,7 @@ enum Neighborhoods {
     
     static let williamsburg = Neighborhood(
         name: "Williamsburg",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.69817189933357, longitude: -73.96189756266841),
             CLLocationCoordinate2D(latitude: 40.700708825627174, longitude: -73.94185362920655),
@@ -738,6 +728,7 @@ enum Neighborhoods {
     
     static let greenpoint = Neighborhood(
         name: "Greenpoint",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.72417854839742, longitude: -73.95779936812609),
             CLLocationCoordinate2D(latitude: 40.723115054680676, longitude: -73.9588192665053),
@@ -783,6 +774,7 @@ enum Neighborhoods {
     
     static let bushwick = Neighborhood(
         name: "Bushwick",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.70944371850317, longitude: -73.92195570963415),
             CLLocationCoordinate2D(latitude: 40.70571965683928, longitude: -73.9260754749528),
@@ -808,6 +800,7 @@ enum Neighborhoods {
     
     static let gravesend = Neighborhood(
         name: "Gravesend",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.5941474105133, longitude: -74.00196162208934),
             CLLocationCoordinate2D(latitude: 40.592658295532516, longitude: -74.00108017334628),
@@ -842,6 +835,7 @@ enum Neighborhoods {
     )
     static let midwood = Neighborhood(
         name: "Midwood",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.63055046473045, longitude: -73.94744327318229),
             CLLocationCoordinate2D(latitude: 40.62864246357984, longitude: -73.9659234634768),
@@ -855,6 +849,7 @@ enum Neighborhoods {
     )
     static let sheepsheadBay = Neighborhood(
         name: "Sheepshead Bay",
+        borough: "Brooklyn",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.5840217816299, longitude: -73.96667769385401),
             CLLocationCoordinate2D(latitude: 40.584164199878614, longitude: -73.96428651203557),
@@ -886,6 +881,7 @@ enum Neighborhoods {
     
     static let financialDistrict = Neighborhood(
         name: "Financial District",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.701184839551075, longitude: -74.01359962958216),
             CLLocationCoordinate2D(latitude: 40.70059053627824, longitude: -74.01353544572822),
@@ -926,6 +922,7 @@ enum Neighborhoods {
     )
     static let batteryPark = Neighborhood(
         name: "Battery Park",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.71891713643288, longitude: -74.01307502582871),
             CLLocationCoordinate2D(latitude: 40.71832039353569, longitude: -74.01323766614598),
@@ -977,6 +974,7 @@ enum Neighborhoods {
     
     static let tribeca = Neighborhood(
         name: "Tribeca",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.71892228283022, longitude: -74.01307886608978),
             CLLocationCoordinate2D(latitude: 40.71880937187436, longitude: -74.01249913955702),
@@ -1004,6 +1002,7 @@ enum Neighborhoods {
     )
     static let twoBridges = Neighborhood(
         name: "Two Bridges",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.70804718256545, longitude: -73.9994314089478),
             CLLocationCoordinate2D(latitude: 40.70820261797323, longitude: -73.99891169006814),
@@ -1021,6 +1020,7 @@ enum Neighborhoods {
     )
     static let civicCenter = Neighborhood(
         name: "Civic Center",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.7127849638963, longitude: -73.99802077679439),
             CLLocationCoordinate2D(latitude: 40.71316654848934, longitude: -73.99812609182109),
@@ -1045,6 +1045,7 @@ enum Neighborhoods {
     )
     static let chinatown = Neighborhood(
         name: "Chinatown",
+        borough: "Manhattan",
         boundary: [
             CLLocationCoordinate2D(latitude: 40.712745468561394, longitude: -73.99800802010436),
             CLLocationCoordinate2D(latitude: 40.71308160293924, longitude: -73.99404629125749),
@@ -1069,97 +1070,472 @@ enum Neighborhoods {
         ]
     )
     
+    static let centralPark = Neighborhood(
+        name: "Central Park",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.768496147421246, longitude: -73.98142765917768),
+            CLLocationCoordinate2D(latitude: 40.76831874700272, longitude: -73.98123935121251),
+            CLLocationCoordinate2D(latitude: 40.768094891876814, longitude: -73.98115749997496),
+            CLLocationCoordinate2D(latitude: 40.76789858753054, longitude: -73.98117568913891),
+            CLLocationCoordinate2D(latitude: 40.7644362103222, longitude: -73.9729561162303),
+            CLLocationCoordinate2D(latitude: 40.79659978302203, longitude: -73.9495087586714),
+            CLLocationCoordinate2D(latitude: 40.79673425712784, longitude: -73.94967981273705),
+            CLLocationCoordinate2D(latitude: 40.796908575008786, longitude: -73.94971270775008),
+            CLLocationCoordinate2D(latitude: 40.79703806799452, longitude: -73.94974560276265),
+            CLLocationCoordinate2D(latitude: 40.800439799917655, longitude: -73.95784604716934),
+            CLLocationCoordinate2D(latitude: 40.800310313566996, longitude: -73.95801052223264),
+            CLLocationCoordinate2D(latitude: 40.800300353068366, longitude: -73.9582999983439),
+            CLLocationCoordinate2D(latitude: 40.768496147421246, longitude: -73.98142765917768)
+        ]
+    )
+    
+    static let midtown = Neighborhood(
+        name: "Midtown",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.76415893574776, longitude: -73.98475029547356),
+            CLLocationCoordinate2D(latitude: 40.76177807501665, longitude: -73.97906888551611),
+            CLLocationCoordinate2D(latitude: 40.75356905146651, longitude: -73.98503306625108),
+            CLLocationCoordinate2D(latitude: 40.755945612849246, longitude: -73.99072755781629),
+            CLLocationCoordinate2D(latitude: 40.75219268588893, longitude: -73.99346857735057),
+            CLLocationCoordinate2D(latitude: 40.74981480765095, longitude: -73.9877340004316),
+            CLLocationCoordinate2D(latitude: 40.744812439081954, longitude: -73.9914193119129),
+            CLLocationCoordinate2D(latitude: 40.741409860863286, longitude: -73.983372796842),
+            CLLocationCoordinate2D(latitude: 40.74641025059978, longitude: -73.97975054357624),
+            CLLocationCoordinate2D(latitude: 40.7477716366478, longitude: -73.98296858463945),
+            CLLocationCoordinate2D(latitude: 40.752799492666185, longitude: -73.97929373147247),
+            CLLocationCoordinate2D(latitude: 40.7480194194128, longitude: -73.9679267772299),
+            CLLocationCoordinate2D(latitude: 40.75493272184002, longitude: -73.96189339786099),
+            CLLocationCoordinate2D(latitude: 40.75543427195137, longitude: -73.96103774636603),
+            CLLocationCoordinate2D(latitude: 40.756746004061824, longitude: -73.95995799942709),
+            CLLocationCoordinate2D(latitude: 40.7585074763046, longitude: -73.9587779243713),
+            CLLocationCoordinate2D(latitude: 40.76443652431138, longitude: -73.97295563081992),
+            CLLocationCoordinate2D(latitude: 40.76790164073273, longitude: -73.98117962045926),
+            CLLocationCoordinate2D(latitude: 40.76810431843066, longitude: -73.9811583815047),
+            CLLocationCoordinate2D(latitude: 40.7683166467844, longitude: -73.98123908953363),
+            CLLocationCoordinate2D(latitude: 40.768489156705755, longitude: -73.98143684622727),
+            CLLocationCoordinate2D(latitude: 40.768509015105735, longitude: -73.98188259909662),
+            CLLocationCoordinate2D(latitude: 40.76833690877427, longitude: -73.98226717019907),
+            CLLocationCoordinate2D(latitude: 40.76809860696369, longitude: -73.98240701423637),
+            CLLocationCoordinate2D(latitude: 40.76789340194196, longitude: -73.98234583247007),
+            CLLocationCoordinate2D(latitude: 40.76774115264553, longitude: -73.98215354691918),
+            CLLocationCoordinate2D(latitude: 40.76415893574776, longitude: -73.98475029547356)
+        ]
+    )
+    
+    static let theaterDistrict = Neighborhood(
+        name: "Theater District",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.753571508931515, longitude: -73.98503416355642),
+            CLLocationCoordinate2D(latitude: 40.76177819486213, longitude: -73.97906888784188),
+            CLLocationCoordinate2D(latitude: 40.76415888707439, longitude: -73.98474981852176),
+            CLLocationCoordinate2D(latitude: 40.75594572423836, longitude: -73.99072694108669),
+            CLLocationCoordinate2D(latitude: 40.753571508931515, longitude: -73.98503416355642)
+        ]
+    )
+    
+    static let murrayHill = Neighborhood(
+        name: "Murray Hill",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.747771802811656, longitude: -73.9829660511673),
+            CLLocationCoordinate2D(latitude: 40.74320436736056, longitude: -73.97206926274323),
+            CLLocationCoordinate2D(latitude: 40.74802001105476, longitude: -73.96792818654336),
+            CLLocationCoordinate2D(latitude: 40.75279897404059, longitude: -73.97929380930219),
+            CLLocationCoordinate2D(latitude: 40.747771802811656, longitude: -73.9829660511673)
+        ]
+    )
+    
+    static let hellsKitchen = Neighborhood(
+        name: "Hell's Kitchen",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.767411820510546, longitude: -73.98239796628658),
+            CLLocationCoordinate2D(latitude: 40.772406927299386, longitude: -73.99425200758104),
+            CLLocationCoordinate2D(latitude: 40.772474036896426, longitude: -73.99420555706887),
+            CLLocationCoordinate2D(latitude: 40.773265153409824, longitude: -73.99612391607323),
+            CLLocationCoordinate2D(latitude: 40.7731392870966, longitude: -73.99622259958106),
+            CLLocationCoordinate2D(latitude: 40.77237670050482, longitude: -73.99445276486065),
+            CLLocationCoordinate2D(latitude: 40.771931603325726, longitude: -73.99477478596476),
+            CLLocationCoordinate2D(latitude: 40.77282054496783, longitude: -73.99686272200111),
+            CLLocationCoordinate2D(latitude: 40.77252695549939, longitude: -73.9970851262056),
+            CLLocationCoordinate2D(latitude: 40.77166554375751, longitude: -73.99497641461424),
+            CLLocationCoordinate2D(latitude: 40.77151607391659, longitude: -73.99492966977635),
+            CLLocationCoordinate2D(latitude: 40.771437405443805, longitude: -73.99498160848535),
+            CLLocationCoordinate2D(latitude: 40.77144054418119, longitude: -73.99512154366687),
+            CLLocationCoordinate2D(latitude: 40.77119620275249, longitude: -73.9952832888418),
+            CLLocationCoordinate2D(latitude: 40.77145580930028, longitude: -73.99589616560962),
+            CLLocationCoordinate2D(latitude: 40.77132993958551, longitude: -73.99598446141495),
+            CLLocationCoordinate2D(latitude: 40.77103886495692, longitude: -73.99541832948573),
+            CLLocationCoordinate2D(latitude: 40.770551115422876, longitude: -73.99576112496564),
+            CLLocationCoordinate2D(latitude: 40.77060573603072, longitude: -73.99591214222504),
+            CLLocationCoordinate2D(latitude: 40.77047185806765, longitude: -73.9960017826035),
+            CLLocationCoordinate2D(latitude: 40.77041285579472, longitude: -73.99586674195955),
+            CLLocationCoordinate2D(latitude: 40.76977562790938, longitude: -73.99630822098705),
+            CLLocationCoordinate2D(latitude: 40.77076310613123, longitude: -73.99866551787899),
+            CLLocationCoordinate2D(latitude: 40.77041767900948, longitude: -73.99893952752832),
+            CLLocationCoordinate2D(latitude: 40.76942249951907, longitude: -73.99658670400393),
+            CLLocationCoordinate2D(latitude: 40.768734105486885, longitude: -73.9970496815646),
+            CLLocationCoordinate2D(latitude: 40.76836853298602, longitude: -73.99614175101308),
+            CLLocationCoordinate2D(latitude: 40.76805563325573, longitude: -73.99643033516836),
+            CLLocationCoordinate2D(latitude: 40.76457387321406, longitude: -73.99885531423672),
+            CLLocationCoordinate2D(latitude: 40.76586214568991, longitude: -74.00199284639582),
+            CLLocationCoordinate2D(latitude: 40.76553137540992, longitude: -74.00233763015015),
+            CLLocationCoordinate2D(latitude: 40.7651309670793, longitude: -74.00225718060769),
+            CLLocationCoordinate2D(latitude: 40.76403418407972, longitude: -73.99951040336866),
+            CLLocationCoordinate2D(latitude: 40.76429532453065, longitude: -73.99934950428373),
+            CLLocationCoordinate2D(latitude: 40.7641734591146, longitude: -73.99914263403146),
+            CLLocationCoordinate2D(latitude: 40.76338831447251, longitude: -73.99989226670922),
+            CLLocationCoordinate2D(latitude: 40.764754951415, longitude: -74.00309875561933),
+            CLLocationCoordinate2D(latitude: 40.76434583374868, longitude: -74.00312174120303),
+            CLLocationCoordinate2D(latitude: 40.76343183837511, longitude: -74.00091512517915),
+            CLLocationCoordinate2D(latitude: 40.762839910856115, longitude: -74.00136334405879),
+            CLLocationCoordinate2D(latitude: 40.76377132383803, longitude: -74.00359294566633),
+            CLLocationCoordinate2D(latitude: 40.763553705151, longitude: -74.0037998159186),
+            CLLocationCoordinate2D(latitude: 40.76263969888464, longitude: -74.00155872151961),
+            CLLocationCoordinate2D(latitude: 40.761734358155024, longitude: -74.00220759051173),
+            CLLocationCoordinate2D(latitude: 40.762661735565274, longitude: -74.00438569848541),
+            CLLocationCoordinate2D(latitude: 40.76247626111862, longitude: -74.00456613346527),
+            CLLocationCoordinate2D(latitude: 40.76155864308231, longitude: -74.00231069621455),
+            CLLocationCoordinate2D(latitude: 40.760982684865354, longitude: -74.00272311902633),
+            CLLocationCoordinate2D(latitude: 40.76104125704589, longitude: -74.0030839890198),
+            CLLocationCoordinate2D(latitude: 40.75909221318102, longitude: -74.00450562366774),
+            CLLocationCoordinate2D(latitude: 40.759882956690575, longitude: -74.00642596738366),
+            CLLocationCoordinate2D(latitude: 40.759238647874184, longitude: -74.00699304874946),
+            CLLocationCoordinate2D(latitude: 40.7581832413978, longitude: -74.00463021633672),
+            CLLocationCoordinate2D(latitude: 40.7571166408801, longitude: -74.00524453792694),
+            CLLocationCoordinate2D(latitude: 40.75219275112792, longitude: -73.99346383034083),
+            CLLocationCoordinate2D(latitude: 40.767411820510546, longitude: -73.98239796628658)
+        ]
+    )
+    
+    static let westVillage = Neighborhood(
+        name: "West Village",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.72838789995734, longitude: -74.00285243298758),
+            CLLocationCoordinate2D(latitude: 40.731080297601295, longitude: -74.00141786412776),
+            CLLocationCoordinate2D(latitude: 40.73735437973653, longitude: -73.99683551347813),
+            CLLocationCoordinate2D(latitude: 40.74256157061046, longitude: -74.00921899550006),
+            CLLocationCoordinate2D(latitude: 40.74227497676918, longitude: -74.00926102518828),
+            CLLocationCoordinate2D(latitude: 40.742576974851744, longitude: -74.01008516190574),
+            CLLocationCoordinate2D(latitude: 40.7423799403077, longitude: -74.01029320981188),
+            CLLocationCoordinate2D(latitude: 40.74261638169037, longitude: -74.01082373197254),
+            CLLocationCoordinate2D(latitude: 40.74182824047915, longitude: -74.01140626610952),
+            CLLocationCoordinate2D(latitude: 40.74123712844141, longitude: -74.0095650421408),
+            CLLocationCoordinate2D(latitude: 40.74061200444825, longitude: -74.00969313854415),
+            CLLocationCoordinate2D(latitude: 40.74070797646982, longitude: -74.01144272758498),
+            CLLocationCoordinate2D(latitude: 40.73922039457412, longitude: -74.0115456445875),
+            CLLocationCoordinate2D(latitude: 40.73918440427724, longitude: -74.01038189079125),
+            CLLocationCoordinate2D(latitude: 40.73837180445307, longitude: -74.01043916384027),
+            CLLocationCoordinate2D(latitude: 40.738401796735076, longitude: -74.0110804159322),
+            CLLocationCoordinate2D(latitude: 40.738089876344304, longitude: -74.01111208270228),
+            CLLocationCoordinate2D(latitude: 40.73805388543619, longitude: -74.0104787473026),
+            CLLocationCoordinate2D(latitude: 40.7342934487892, longitude: -74.01082796445891),
+            CLLocationCoordinate2D(latitude: 40.73435943583618, longitude: -74.01199963494798),
+            CLLocationCoordinate2D(latitude: 40.7340654930324, longitude: -74.01199171825516),
+            CLLocationCoordinate2D(latitude: 40.7340175022475, longitude: -74.0108517145362),
+            CLLocationCoordinate2D(latitude: 40.73328563848506, longitude: -74.01087546461405),
+            CLLocationCoordinate2D(latitude: 40.733351626531174, longitude: -74.01400255814842),
+            CLLocationCoordinate2D(latitude: 40.733069677147995, longitude: -74.01401839153348),
+            CLLocationCoordinate2D(latitude: 40.73302168564436, longitude: -74.01093088146143),
+            CLLocationCoordinate2D(latitude: 40.73045467873976, longitude: -74.01114013178868),
+            CLLocationCoordinate2D(latitude: 40.73068983834466, longitude: -74.01407343664232),
+            CLLocationCoordinate2D(latitude: 40.72849498305132, longitude: -74.01436159505343),
+            CLLocationCoordinate2D(latitude: 40.728241835978025, longitude: -74.01132694406164),
+            CLLocationCoordinate2D(latitude: 40.72919929815268, longitude: -74.01120133654932),
+            CLLocationCoordinate2D(latitude: 40.72838789995734, longitude: -74.00285243298758)
+        ]
+    )
+    
+    static let nolita = Neighborhood(
+        name: "Nolita",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.72083163289872, longitude: -73.99763849229002),
+            CLLocationCoordinate2D(latitude: 40.7195080380279, longitude: -73.99436833937968),
+            CLLocationCoordinate2D(latitude: 40.72418211678226, longitude: -73.99260526631987),
+            CLLocationCoordinate2D(latitude: 40.72510615990734, longitude: -73.99530396030364),
+            CLLocationCoordinate2D(latitude: 40.72324438648775, longitude: -73.99676506324947),
+            CLLocationCoordinate2D(latitude: 40.72083163289872, longitude: -73.99763849229002)
+        ]
+    )
+    
+    static let greenwichVillage = Neighborhood(
+        name: "Greenwich Village",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.72838613668472, longitude: -74.00285116682171),
+            CLLocationCoordinate2D(latitude: 40.72545447903039, longitude: -73.99677869663765),
+            CLLocationCoordinate2D(latitude: 40.73176708269537, longitude: -73.9914731247948),
+            CLLocationCoordinate2D(latitude: 40.7347845641041, longitude: -73.99075896697994),
+            CLLocationCoordinate2D(latitude: 40.73735457400855, longitude: -73.99683498761966),
+            CLLocationCoordinate2D(latitude: 40.731080704536566, longitude: -74.00141001246928),
+            CLLocationCoordinate2D(latitude: 40.72838613668472, longitude: -74.00285116682171)
+        ]
+    )
+    
+    static let littleItaly = Neighborhood(
+        name: "Little Italy",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.71684452909031, longitude: -73.9977859744129),
+            CLLocationCoordinate2D(latitude: 40.717878075252514, longitude: -73.9971125032427),
+            CLLocationCoordinate2D(latitude: 40.719057030736565, longitude: -73.99648149199399),
+            CLLocationCoordinate2D(latitude: 40.71852649605037, longitude: -73.99478564641967),
+            CLLocationCoordinate2D(latitude: 40.71950539749648, longitude: -73.99437135329126),
+            CLLocationCoordinate2D(latitude: 40.72083285958681, longitude: -73.9976447301787),
+            CLLocationCoordinate2D(latitude: 40.71802185655301, longitude: -73.99994652056712),
+            CLLocationCoordinate2D(latitude: 40.71722448704665, longitude: -73.99883094444839),
+            CLLocationCoordinate2D(latitude: 40.71684452909031, longitude: -73.9977859744129)
+        ]
+    )
+    
+    static let soho = Neighborhood(
+        name: "SoHo",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.71802172247274, longitude: -73.99994604948303),
+            CLLocationCoordinate2D(latitude: 40.720831224286115, longitude: -73.99764344089212),
+            CLLocationCoordinate2D(latitude: 40.723252751098045, longitude: -73.99676302679813),
+            CLLocationCoordinate2D(latitude: 40.72510204553561, longitude: -73.9953017705815),
+            CLLocationCoordinate2D(latitude: 40.72545506392498, longitude: -73.99677922383698),
+            CLLocationCoordinate2D(latitude: 40.728385954093454, longitude: -74.0028531613577),
+            CLLocationCoordinate2D(latitude: 40.72919230099163, longitude: -74.0112004791612),
+            CLLocationCoordinate2D(latitude: 40.72601038445788, longitude: -74.01161303720163),
+            CLLocationCoordinate2D(latitude: 40.725793353583896, longitude: -74.01085413652355),
+            CLLocationCoordinate2D(latitude: 40.71802172247274, longitude: -73.99994604948303)
+        ]
+    )
+    
+    static let flatironDistrict = Neighborhood(
+        name: "Flatiron District",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.74481167137381, longitude: -73.99141698862766),
+            CLLocationCoordinate2D(latitude: 40.74103468439708, longitude: -73.99416489357559),
+            CLLocationCoordinate2D(latitude: 40.73831065694472, longitude: -73.98772731408648),
+            CLLocationCoordinate2D(latitude: 40.73952767944229, longitude: -73.98685819238958),
+            CLLocationCoordinate2D(latitude: 40.73885240563885, longitude: -73.98524620436831),
+            CLLocationCoordinate2D(latitude: 40.74141359345592, longitude: -73.98337064592886),
+            CLLocationCoordinate2D(latitude: 40.74481167137381, longitude: -73.99141698862766)
+        ]
+    )
+    
+    static let chelsea = Neighborhood(
+        name: "Chelsea",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.73519959319873, longitude: -73.99172718703723),
+            CLLocationCoordinate2D(latitude: 40.73714392370891, longitude: -73.99032262914895),
+            CLLocationCoordinate2D(latitude: 40.7391690194228, longitude: -73.98975616049594),
+            CLLocationCoordinate2D(latitude: 40.74103488749816, longitude: -73.99416589809837),
+            CLLocationCoordinate2D(latitude: 40.74981938828594, longitude: -73.98773550259673),
+            CLLocationCoordinate2D(latitude: 40.757116695528254, longitude: -74.00523976960488),
+            CLLocationCoordinate2D(latitude: 40.75721242647174, longitude: -74.00547961701204),
+            CLLocationCoordinate2D(latitude: 40.75495308720514, longitude: -74.00713284720074),
+            CLLocationCoordinate2D(latitude: 40.75238697657903, longitude: -74.0083212176801),
+            CLLocationCoordinate2D(latitude: 40.7506560393451, longitude: -74.00898839345729),
+            CLLocationCoordinate2D(latitude: 40.75131004027139, longitude: -74.01057659254242),
+            CLLocationCoordinate2D(latitude: 40.751052528630765, longitude: -74.01069556672566),
+            CLLocationCoordinate2D(latitude: 40.750357242219934, longitude: -74.00911490971784),
+            CLLocationCoordinate2D(latitude: 40.749988029729224, longitude: -74.00921506377388),
+            CLLocationCoordinate2D(latitude: 40.7499649589939, longitude: -74.0096261896108),
+            CLLocationCoordinate2D(latitude: 40.748951401488284, longitude: -74.00997276006328),
+            CLLocationCoordinate2D(latitude: 40.74895716925607, longitude: -74.0112213645066),
+            CLLocationCoordinate2D(latitude: 40.748657244678895, longitude: -74.01125181827365),
+            CLLocationCoordinate2D(latitude: 40.74842076473155, longitude: -74.00893733198859),
+            CLLocationCoordinate2D(latitude: 40.74779207005153, longitude: -74.00908198738118),
+            CLLocationCoordinate2D(latitude: 40.74802278438631, longitude: -74.01133556613269),
+            CLLocationCoordinate2D(latitude: 40.74760173012277, longitude: -74.01143454087473),
+            CLLocationCoordinate2D(latitude: 40.74735947851681, longitude: -74.00916573524024),
+            CLLocationCoordinate2D(latitude: 40.74678260549797, longitude: -74.00924958822957),
+            CLLocationCoordinate2D(latitude: 40.74699601952503, longitude: -74.01154884763108),
+            CLLocationCoordinate2D(latitude: 40.74659803065231, longitude: -74.01161736860661),
+            CLLocationCoordinate2D(latitude: 40.74633847140913, longitude: -74.00931810920507),
+            CLLocationCoordinate2D(latitude: 40.74574436534388, longitude: -74.00943992430982),
+            CLLocationCoordinate2D(latitude: 40.746003759190444, longitude: -74.01174221562366),
+            CLLocationCoordinate2D(latitude: 40.7455826922002, longitude: -74.01177266914368),
+            CLLocationCoordinate2D(latitude: 40.74529428857511, longitude: -74.00952670383418),
+            CLLocationCoordinate2D(latitude: 40.74499029188965, longitude: -74.00962951411537),
+            CLLocationCoordinate2D(latitude: 40.74490422264137, longitude: -74.008777481178),
+            CLLocationCoordinate2D(latitude: 40.74398614372686, longitude: -74.0089857558955),
+            CLLocationCoordinate2D(latitude: 40.744000488807416, longitude: -74.00952537675627),
+            CLLocationCoordinate2D(latitude: 40.74367772374217, longitude: -74.00954431085215),
+            CLLocationCoordinate2D(latitude: 40.74392876336805, longitude: -74.01216667889263),
+            CLLocationCoordinate2D(latitude: 40.74352709951131, longitude: -74.0122234810887),
+            CLLocationCoordinate2D(latitude: 40.74325454051322, longitude: -74.00960111304822),
+            CLLocationCoordinate2D(latitude: 40.742967635079964, longitude: -74.00963898114591),
+            CLLocationCoordinate2D(latitude: 40.742887748957685, longitude: -74.00910231428348),
+            CLLocationCoordinate2D(latitude: 40.74255063310787, longitude: -74.00920645164258),
+            CLLocationCoordinate2D(latitude: 40.73519959319873, longitude: -73.99172718703723)
+        ]
+    )
+    
+    static let kipsBay = Neighborhood(
+        name: "Kips Bay",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.73951668301919, longitude: -73.98475570342055),
+            CLLocationCoordinate2D(latitude: 40.73516946923428, longitude: -73.9744781418042),
+            CLLocationCoordinate2D(latitude: 40.73600622475709, longitude: -73.97456717829418),
+            CLLocationCoordinate2D(latitude: 40.73644108962981, longitude: -73.97448109165798),
+            CLLocationCoordinate2D(latitude: 40.73577918030949, longitude: -73.9728581354128),
+            CLLocationCoordinate2D(latitude: 40.73581179538456, longitude: -73.97249226720845),
+            CLLocationCoordinate2D(latitude: 40.73920784454637, longitude: -73.97271826096407),
+            CLLocationCoordinate2D(latitude: 40.74306962549042, longitude: -73.97177596876433),
+            CLLocationCoordinate2D(latitude: 40.746427781005394, longitude: -73.97976376262037),
+            CLLocationCoordinate2D(latitude: 40.73951668301919, longitude: -73.98475570342055)
+        ]
+    )
+    
+    static let gramercy = Neighborhood(
+        name: "Gramercy",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.73520445455296, longitude: -73.99172102800652),
+            CLLocationCoordinate2D(latitude: 40.731356832614495, longitude: -73.98255318957932),
+            CLLocationCoordinate2D(latitude: 40.736888625131144, longitude: -73.97854700567437),
+            CLLocationCoordinate2D(latitude: 40.73951849651135, longitude: -73.98474788582368),
+            CLLocationCoordinate2D(latitude: 40.738853347983024, longitude: -73.98524380298983),
+            CLLocationCoordinate2D(latitude: 40.73952893967643, longitude: -73.98685947496715),
+            CLLocationCoordinate2D(latitude: 40.73830870839072, longitude: -73.98772531419974),
+            CLLocationCoordinate2D(latitude: 40.739166463092204, longitude: -73.9897543281938),
+            CLLocationCoordinate2D(latitude: 40.73714384842435, longitude: -73.9903153224103),
+            CLLocationCoordinate2D(latitude: 40.73520445455296, longitude: -73.99172102800652)
+        ]
+    )
+    
+    static let stuyvesantTown = Neighborhood(
+        name: "Stuyvesant Town",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.73690079538517, longitude: -73.97854782528785),
+            CLLocationCoordinate2D(latitude: 40.731366662181756, longitude: -73.98255631009368),
+            CLLocationCoordinate2D(latitude: 40.726818150628986, longitude: -73.9717061182372),
+            CLLocationCoordinate2D(latitude: 40.72929919585658, longitude: -73.97149625113609),
+            CLLocationCoordinate2D(latitude: 40.7313284793147, longitude: -73.9735476888097),
+            CLLocationCoordinate2D(latitude: 40.73516107679333, longitude: -73.97447110939311),
+            CLLocationCoordinate2D(latitude: 40.73690079538517, longitude: -73.97854782528785)
+        ]
+    )
+    
+    static let eastVillage = Neighborhood(
+        name: "East Village",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.72419673751935, longitude: -73.99261373557589),
+            CLLocationCoordinate2D(latitude: 40.72070421900489, longitude: -73.98122548010862),
+            CLLocationCoordinate2D(latitude: 40.71931454079893, longitude: -73.97713843732639),
+            CLLocationCoordinate2D(latitude: 40.71864019727161, longitude: -73.97357951273239),
+            CLLocationCoordinate2D(latitude: 40.72685085655564, longitude: -73.97166920761984),
+            CLLocationCoordinate2D(latitude: 40.7347891520572, longitude: -73.99075971035793),
+            CLLocationCoordinate2D(latitude: 40.731757425243956, longitude: -73.99147157270572),
+            CLLocationCoordinate2D(latitude: 40.73009937396469, longitude: -73.99285001780822),
+            CLLocationCoordinate2D(latitude: 40.72973974409146, longitude: -73.99078034394546),
+            CLLocationCoordinate2D(latitude: 40.72419673751935, longitude: -73.99261373557589)
+        ]
+    )
+    
+    static let lowerEastSide = Neighborhood(
+        name: "Lower East Side",
+        borough: "Manhattan",
+        boundary: [
+            CLLocationCoordinate2D(latitude: 40.718541836040856, longitude: -73.9947546077552),
+            CLLocationCoordinate2D(latitude: 40.71678860146082, longitude: -73.9891817931574),
+            CLLocationCoordinate2D(latitude: 40.71448270951268, longitude: -73.99023996671677),
+            CLLocationCoordinate2D(latitude: 40.7133999153028, longitude: -73.99005478634362),
+            CLLocationCoordinate2D(latitude: 40.713079084007035, longitude: -73.99410230020837),
+            CLLocationCoordinate2D(latitude: 40.709529784649334, longitude: -73.9922240421405),
+            CLLocationCoordinate2D(latitude: 40.71001105666633, longitude: -73.9886262520384),
+            CLLocationCoordinate2D(latitude: 40.7091888792005, longitude: -73.98849397399609),
+            CLLocationCoordinate2D(latitude: 40.70987068368862, longitude: -73.98132484813097),
+            CLLocationCoordinate2D(latitude: 40.710291794738396, longitude: -73.98129839379189),
+            CLLocationCoordinate2D(latitude: 40.71049232287356, longitude: -73.97809741877474),
+            CLLocationCoordinate2D(latitude: 40.71197621230439, longitude: -73.97640434107956),
+            CLLocationCoordinate2D(latitude: 40.71863898116405, longitude: -73.97356671734909),
+            CLLocationCoordinate2D(latitude: 40.71930887063044, longitude: -73.9770935097308),
+            CLLocationCoordinate2D(latitude: 40.724194171452325, longitude: -73.9925858112171),
+            CLLocationCoordinate2D(latitude: 40.718541836040856, longitude: -73.9947546077552)
+        ]
+    )
+    
     static func getNeighborhoodName(for location: CLLocationCoordinate2D) -> String {
-        if parkSlope.contains(location) { return parkSlope.name }
-        if prospectPark.contains(location) { return prospectPark.name }
-        if greenwoodHeights.contains(location) { return greenwoodHeights.name }
-        if gowanus.contains(location) { return gowanus.name }
-        if windsorTerrace.contains(location) { return windsorTerrace.name }
-        if carrollGardens.contains(location) { return carrollGardens.name }
-        if cobbleHill.contains(location) { return cobbleHill.name }
-        if boerumHill.contains(location) { return boerumHill.name }
-        if prospectHeights.contains(location) { return prospectHeights.name }
-        if crownHeights.contains(location) { return crownHeights.name }
-        if fortGreene.contains(location) { return fortGreene.name }
-        if columbiaWaterfront.contains(location) { return columbiaWaterfront.name }
-        if brooklynHeights.contains(location) { return brooklynHeights.name }
-        if dumbo.contains(location) { return dumbo.name }
-        if downtownBrooklyn.contains(location) { return downtownBrooklyn.name }
-        if vinegarHill.contains(location) { return vinegarHill.name }
-        if clintonHill.contains(location) { return clintonHill.name }
-        if greenwoodCemetery.contains(location) { return greenwoodCemetery.name }
-        if sunsetPark.contains(location) { return sunsetPark.name }
-        if redHook.contains(location) { return redHook.name }
-        if prospectLeffertsGardens.contains(location) { return prospectLeffertsGardens.name }
-        if flatbush.contains(location) { return flatbush.name }
-        if kensington.contains(location) { return kensington.name }
-        if boroughPark.contains(location) { return boroughPark.name }
-        if bedfordStuyvensant.contains(location) { return bedfordStuyvensant.name }
-        if dykerHeights.contains(location) { return dykerHeights.name }
-        if bensonhurst.contains(location) { return bensonhurst.name }
-        if bathBeach.contains(location) { return bathBeach.name }
-        if bayRidge.contains(location) { return bayRidge.name }
-        if fortHamilton.contains(location) { return fortHamilton.name }
-        if williamsburg.contains(location) { return williamsburg.name }
-        if greenpoint.contains(location) { return greenpoint.name }
-        if bushwick.contains(location) { return bushwick.name }
-        if gravesend.contains(location) { return gravesend.name }
-        if midwood.contains(location) { return midwood.name }
-        if sheepsheadBay.contains(location) { return sheepsheadBay.name }
-        if financialDistrict.contains(location) { return financialDistrict.name }
-        if batteryPark.contains(location) { return batteryPark.name }
-        if tribeca.contains(location) { return tribeca.name }
-        if twoBridges.contains(location) { return twoBridges.name }
-        if civicCenter.contains(location) { return civicCenter.name }
-        if chinatown.contains(location) { return chinatown.name }
-        return "New York"
+        return getAllNeighborhoods().first { $0.contains(location) }?.name ?? "New York"
     }
     
     static func getNeighborhoodForName(_ name: String) -> Neighborhood? {
-        switch name {
-        case "Park Slope": return parkSlope
-        case "Prospect Park": return prospectPark
-        case "Greenwood Heights": return greenwoodHeights
-        case "Gowanus": return gowanus
-        case "Windsor Terrace": return windsorTerrace
-        case "Carroll Gardens": return carrollGardens
-        case "Cobble Hill": return cobbleHill
-        case "Boerum Hill": return boerumHill
-        case "Prospect Heights": return prospectHeights
-        case "Crown Heights": return crownHeights
-        case "Fort Greene": return fortGreene
-        case "Columbia Waterfront": return columbiaWaterfront
-        case "Brooklyn Heights": return brooklynHeights
-        case "Dumbo": return dumbo
-        case "Downtown Brooklyn": return downtownBrooklyn
-        case "Vinegar Hill": return vinegarHill
-        case "Clinton Hill": return clintonHill
-        case "Greenwood Cemetery": return greenwoodCemetery
-        case "Sunset Park": return sunsetPark
-        case "Red Hook": return redHook
-        case "Prospect Lefferts Gardens": return prospectLeffertsGardens
-        case "Flatbush": return flatbush
-        case "Kensington": return kensington
-        case "Borough Park": return boroughPark
-        case "Bedford Stuyvensant": return bedfordStuyvensant
-        case "Dyker Heights": return dykerHeights
-        case "Bensonhurst": return bensonhurst
-        case "Bath Beach": return bathBeach
-        case "Bay Ridge": return bayRidge
-        case "Fort Hamilton": return fortHamilton
-        case "Williamsburg": return williamsburg
-        case "Greenpoint": return greenpoint
-        case "Bushwick": return bushwick
-        case "Gravesend": return gravesend
-        case "Midwood": return midwood
-        case "Sheepshead Bay": return sheepsheadBay
-        case "Financial District": return financialDistrict
-        case "Battery Park": return batteryPark
-        case "Tribeca": return tribeca
-        case "Two Bridges": return twoBridges
-        case "Civic Center": return civicCenter
-        case "Chinatown": return chinatown
-        default: return nil
-        }
+        return getAllNeighborhoods().first { $0.name == name }
+    }
+    
+    // MARK: - Get All Neighborhoods
+    static func getAllNeighborhoods() -> [Neighborhood] {
+        return [
+            parkSlope,
+            prospectPark,
+            gowanus,
+            windsorTerrace,
+            carrollGardens,
+            cobbleHill,
+            boerumHill,
+            prospectHeights,
+            crownHeights,
+            fortGreene,
+            columbiaWaterfront,
+            brooklynHeights,
+            dumbo,
+            downtownBrooklyn,
+            vinegarHill,
+            clintonHill,
+            greenwoodCemetery,
+            sunsetPark,
+            redHook,
+            prospectLeffertsGardens,
+            flatbush,
+            kensington,
+            boroughPark,
+            bedfordStuyvensant,
+            dykerHeights,
+            bensonhurst,
+            bathBeach,
+            bayRidge,
+            fortHamilton,
+            williamsburg,
+            greenpoint,
+            bushwick,
+            gravesend,
+            midwood,
+            sheepsheadBay,
+            financialDistrict,
+            batteryPark,
+            tribeca,
+            twoBridges,
+            civicCenter,
+            chinatown,
+            centralPark,
+            midtown,
+            theaterDistrict,
+            murrayHill,
+            hellsKitchen,
+            westVillage,
+            nolita,
+            greenwichVillage,
+            littleItaly,
+            soho,
+            flatironDistrict,
+            chelsea,
+            kipsBay,
+            gramercy,
+            stuyvesantTown,
+            eastVillage,
+            lowerEastSide
+        ]
+    }
+    
+    // MARK: - Get Neighborhoods by Borough
+    static func getNeighborhoodsByBorough(_ borough: String) -> [Neighborhood] {
+        return getAllNeighborhoods().filter { $0.borough == borough }
     }
 }

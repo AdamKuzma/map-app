@@ -15,78 +15,36 @@ struct NeighborhoodsList: View {
     var body: some View {
         List {
             Section(header: Text("Brooklyn")) {
-                let neighborhoods = [
-                    ("Vinegar Hill", Neighborhoods.vinegarHill),
-                    ("Park Slope", Neighborhoods.parkSlope),
-                    ("Prospect Park", Neighborhoods.prospectPark),
-                    ("Gowanus", Neighborhoods.gowanus),
-                    ("Windsor Terrace", Neighborhoods.windsorTerrace),
-                    ("Carroll Gardens", Neighborhoods.carrollGardens),
-                    ("Cobble Hill", Neighborhoods.cobbleHill),
-                    ("Boerum Hill", Neighborhoods.boerumHill),
-                    ("Clinton Hill", Neighborhoods.clintonHill),
-                    ("Greenwood Cemetery", Neighborhoods.greenwoodCemetery),
-                    ("Prospect Heights", Neighborhoods.prospectHeights),
-                    ("Crown Heights", Neighborhoods.crownHeights),
-                    ("Fort Greene", Neighborhoods.fortGreene),
-                    ("Columbia Waterfront", Neighborhoods.columbiaWaterfront),
-                    ("Brooklyn Heights", Neighborhoods.brooklynHeights),
-                    ("Dumbo", Neighborhoods.dumbo),
-                    ("Downtown Brooklyn", Neighborhoods.downtownBrooklyn),
-                    ("Sunset Park", Neighborhoods.sunsetPark),
-                    ("Red Hook", Neighborhoods.redHook),
-                    ("Prospect Lefferts Gardens", Neighborhoods.prospectLeffertsGardens),
-                    ("Flatbush", Neighborhoods.flatbush),
-                    ("Kensington", Neighborhoods.kensington),
-                    ("Borough Park", Neighborhoods.boroughPark),
-                    ("Bedford Stuyvensant", Neighborhoods.bedfordStuyvensant),
-                    ("Dyker Heights", Neighborhoods.dykerHeights),
-                    ("Bensonhurst", Neighborhoods.bensonhurst),
-                    ("Bath Beach", Neighborhoods.bathBeach),
-                    ("Bay Ridge", Neighborhoods.bayRidge),
-                    ("Fort Hamilton", Neighborhoods.fortHamilton),
-                    ("Williamsburg", Neighborhoods.williamsburg),
-                    ("Greenpoint", Neighborhoods.greenpoint),
-                    ("Bushwick", Neighborhoods.bushwick),
-                    ("Gravesend", Neighborhoods.gravesend),
-                    ("Midwood", Neighborhoods.midwood),
-                    ("Sheepshead Bay", Neighborhoods.sheepsheadBay)
-                ]
+                let brooklynNeighborhoods = Neighborhoods.getNeighborhoodsByBorough("Brooklyn")
                 
                 // Sort neighborhoods by highest percentage explored
-                let sortedNeighborhoods = neighborhoods.sorted { 
-                    (neighborhoodPercentages[$0.0] ?? 0.0) > (neighborhoodPercentages[$1.0] ?? 0.0)
+                let sortedNeighborhoods = brooklynNeighborhoods.sorted { 
+                    (neighborhoodPercentages[$0.name] ?? 0.0) > (neighborhoodPercentages[$1.name] ?? 0.0)
                 }
                 
-                ForEach(sortedNeighborhoods, id: \.0) { name, neighborhood in
+                ForEach(sortedNeighborhoods, id: \.name) { neighborhood in
                     HStack {
-                        Text(name)
-                            .foregroundColor((neighborhoodPercentages[name] ?? 0.0) > 0.0 ? .primary : .gray)
+                        Text(neighborhood.name)
+                            .foregroundColor((neighborhoodPercentages[neighborhood.name] ?? 0.0) > 0.0 ? .primary : .gray)
                         Spacer()
-                        Text(String(format: "%.1f%%", neighborhoodPercentages[name] ?? 0.0))
-                            .foregroundColor((neighborhoodPercentages[name] ?? 0.0) > 0.0 ? .primary : .gray)
+                        Text(String(format: "%.1f%%", neighborhoodPercentages[neighborhood.name] ?? 0.0))
+                            .foregroundColor((neighborhoodPercentages[neighborhood.name] ?? 0.0) > 0.0 ? .primary : .gray)
                     }
                 }
             }
             Section(header: Text("Manhattan")) {
-                let manhattanNeighborhoods = [
-                    ("Financial District", Neighborhoods.financialDistrict),
-                    ("Battery Park", Neighborhoods.batteryPark),
-                    ("Tribeca", Neighborhoods.tribeca),
-                    ("Two Bridges", Neighborhoods.twoBridges),
-                    ("Civic Center", Neighborhoods.civicCenter),
-                    ("Chinatown", Neighborhoods.chinatown)
-                ]
+                let manhattanNeighborhoods = Neighborhoods.getNeighborhoodsByBorough("Manhattan")
+                
                 let sortedManhattan = manhattanNeighborhoods.sorted {
-                    (neighborhoodPercentages[$0.0] ?? 0.0) > (neighborhoodPercentages[$1.0] ?? 0.0)
+                    (neighborhoodPercentages[$0.name] ?? 0.0) > (neighborhoodPercentages[$1.name] ?? 0.0)
                 }
-                ForEach(sortedManhattan, id: \ .0) { name, neighborhood in
+                ForEach(sortedManhattan, id: \.name) { neighborhood in
                     HStack {
-                        Text(name)
-                            .foregroundColor((neighborhoodPercentages[name] ?? 0.0) > 0.0 ? .primary : .gray)
+                        Text(neighborhood.name)
+                            .foregroundColor((neighborhoodPercentages[neighborhood.name] ?? 0.0) > 0.0 ? .primary : .gray)
                         Spacer()
-                        Text(String(format: "%.1f%%", neighborhoodPercentages[name] ?? 0.0))
-                            .foregroundColor((neighborhoodPercentages[name] ?? 0.0) > 0.0 ? .primary : .gray)
+                        Text(String(format: "%.1f%%", neighborhoodPercentages[neighborhood.name] ?? 0.0))
+                            .foregroundColor((neighborhoodPercentages[neighborhood.name] ?? 0.0) > 0.0 ? .primary : .gray)
                     }
                 }
             }

@@ -91,20 +91,9 @@ class FogOverlay: UIView {
     func calculateExploredPercentage() -> Double {
         guard let currentLocation = currentLocation else { return 0.0 }
         
-        // Find the current neighborhood
-        let neighborhood: Neighborhood?
-        if isPointInPolygon(currentLocation, polygon: Neighborhoods.parkSlope.boundary) {
-            neighborhood = Neighborhoods.parkSlope
-        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.prospectPark.boundary) {
-            neighborhood = Neighborhoods.prospectPark
-        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.greenwoodHeights.boundary) {
-            neighborhood = Neighborhoods.greenwoodHeights
-        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.gowanus.boundary) {
-            neighborhood = Neighborhoods.gowanus
-        } else if isPointInPolygon(currentLocation, polygon: Neighborhoods.windsorTerrace.boundary) {
-            neighborhood = Neighborhoods.windsorTerrace
-        } else {
-            neighborhood = nil
+        // Find the current neighborhood using a for loop
+        let neighborhood = Neighborhoods.getAllNeighborhoods().first { neighborhood in
+            isPointInPolygon(currentLocation, polygon: neighborhood.boundary)
         }
         
         // If we're in a neighborhood, calculate the percentage
